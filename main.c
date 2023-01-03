@@ -3,6 +3,17 @@
 #include <locale.h>
 #include <string.h>
 
+// lista encadeada com toda a pesquisa
+
+/* 4 listas encadeadas que possuem as pessoas que mencionaram em primeiro lugar (posicao 0 do vetor) uma das tres musicas mais populares da ca:
+    - Masculino que possuem idade <= 20
+    - Masculino que possuem idade > 20 
+    - Feminino que possuem idade <= 20
+    - Feminino que possuem idade > 20 
+*/ 
+
+// vetor com 30 posições que possui a musica e a quantidade de vezes que ela foi mencionada
+
 #define TRUE 1
 #define FALSE 0 
 
@@ -21,6 +32,11 @@ typedef struct lista {
     pessoa p;
     struct lista *proximo;
 }no;
+
+typedef struct lista_musicas {
+    int musica;
+    int quantidade;
+}no_musica;
 
 /*----------------------------------------------------------------------------
                             CABEÇALHO DAS FUNÇÕES:
@@ -42,27 +58,49 @@ void linha();
 int main () {
 
     pessoa *p;
-    no *l;
+    no *pesquisa;
     int laco = TRUE;
-    // criando a lista
-    cria_lista(&l);
-    
+
+    no *lista1, *lista2, lista3, lista4;
+
+    //lista1 = Masculino que possuem idade <= 20
+    //lista2 = Masculino que possuem idade > 20
+    //lista3 = Feminino que possuem idade <= 20
+    //lista4 = Feminino que possuem idade > 20
+
+    cria_lista(&lista1);
+    cria_lista(&lista2);
+    cria_lista(&lista3);
+    cria_lista(&lista4);
+
     int opcao;
     while(laco) {
         printf("1 - Adicionar Pesquisa\n");
-        printf("2 - Imprimir Pesquisa\n");
+        printf("2 - Imprimir Pesquisa Completa\n");
         printf("OPCAO: ");
         scanf("%d", &opcao);
         switch (opcao) {
         case 1:;
             limpa_terminal();
             p = le_pessoa();
-            insere(&l, *p);
+            
+            if ( (p->idade <= 20) && (strcmp(p->sexo, "M") == 0) ) 
+                insere(&lista1, *p);
+
+            if ( (p->idade > 20) && (strcmp(p->sexo, "M") == 0) ) 
+                insere(&lista2, *p);
+
+            if ( (p->idade <= 20) && (strcmp(p->sexo, "F") == 0) )
+                insere(&lista3, *p);
+
+            if ( (p->idade > 20) && (strcmp(p->sexo, "F") == 0) )
+                insere(&lista4, *p);
+
             limpa_terminal();
         break;
         case 2:;
             limpa_terminal();
-            imprime(&l);
+            imprime(&pesquisa);
         break; 
         default:
             printf("Programa Encerrado!");
@@ -73,7 +111,7 @@ int main () {
     return 0;
 }
 /*----------------------------------------------------------------------------
-                            FUNÇÕES DO AUXILIARES:
+                            FUNÇÕES AUXILIARES:
 ----------------------------------------------------------------------------*/
 
 void limpa_buffer() {
@@ -148,3 +186,4 @@ void imprime (no **lista) {
     }
     linha();
 }
+
