@@ -58,10 +58,9 @@ void linha();
 int main () {
 
     pessoa *p;
-    no *pesquisa;
     int laco = TRUE;
 
-    no *lista1, *lista2, lista3, lista4;
+    no *lista1, *lista2, *lista3, *lista4;
 
     //lista1 = Masculino que possuem idade <= 20
     //lista2 = Masculino que possuem idade > 20
@@ -75,8 +74,9 @@ int main () {
 
     int opcao;
     while(laco) {
-        printf("1 - Adicionar Pesquisa\n");
-        printf("2 - Imprimir Pesquisa Completa\n");
+        printf("1 - Adicionar a Pesquisa\n");
+        printf("2 - Imprimir Pesquisa\n");
+        printf("3 - Sair\n");
         printf("OPCAO: ");
         scanf("%d", &opcao);
         switch (opcao) {
@@ -84,26 +84,55 @@ int main () {
             limpa_terminal();
             p = le_pessoa();
             
-            if ( (p->idade <= 20) && (strcmp(p->sexo, "M") == 0) ) 
+            if ( (p->idade <= 20) && (strcmp(&p->sexo, "M") == 0) ) 
                 insere(&lista1, *p);
 
-            if ( (p->idade > 20) && (strcmp(p->sexo, "M") == 0) ) 
+            if ( (p->idade > 20) && (strcmp(&p->sexo, "M") == 0) ) 
                 insere(&lista2, *p);
 
-            if ( (p->idade <= 20) && (strcmp(p->sexo, "F") == 0) )
+            if ( (p->idade <= 20) && (strcmp(&p->sexo, "F") == 0) )
                 insere(&lista3, *p);
 
-            if ( (p->idade > 20) && (strcmp(p->sexo, "F") == 0) )
+            if ( (p->idade > 20) && (strcmp(&p->sexo, "F") == 0) )
                 insere(&lista4, *p);
 
             limpa_terminal();
         break;
         case 2:;
             limpa_terminal();
-            imprime(&pesquisa);
+            printf("Escolha qual categoria:\n1 - MASCULINO COM IDADE MAIOR QUE 20 | 2 - MASCULINO COM IDADE MENOR OU IGUAL A 20\n3 - FEMININO COM IDADE MAIOR QUE 20  | 4 - FEMININO COM IDADE MENOR OU IGUAL A 20\n5 - TODAS\n");
+            printf("Escolha: ");
+            scanf("%d", &opcao);
+            switch (opcao) {
+                case 1:;
+                    imprime(&lista1);
+                break;
+                case 2:;
+                    imprime(&lista2);
+                break;
+                case 3:;
+                    imprime(&lista3);
+                break;
+                case 4:;
+                    imprime(&lista4);
+                break;
+                case 5:;
+                    printf("MASCULINO COM IDADE MAIOR QUE 20");
+                    imprime(&lista1);
+                    printf("ASCULINO COM IDADE MENOR OU IGUAL A 20");
+                    imprime(&lista2);
+                    printf("FEMININO COM IDADE MAIOR QUE 20");                    
+                    imprime(&lista3);
+                    printf("FEMININO COM IDADE MENOR OU IGUAL A 20");
+                    imprime(&lista4);
+                break;
+            default:
+                printf("Opcao Invalida\n");
+                break;
+            }
         break; 
         default:
-            printf("Programa Encerrado!");
+            printf("Programa Encerrado!\n");
             laco = FALSE;
         break;
         }
@@ -136,7 +165,6 @@ void cria_lista(no **lista){
 
 int vazia(no **lista) {
     return (*lista == NULL);
-
 }
 
 pessoa *le_pessoa() {        
