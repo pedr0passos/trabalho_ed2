@@ -53,11 +53,11 @@ void imprime(no **lista);
 void cria_lista(no **lista);
 void adiciona_pesquisa (musicas *m, int musica_escolhida);
 pessoa *le_pessoa(musicas *m);
-int calcula_meio(int ini, int fim);
 void cria_lista_musicas(musicas *m);
 void insere(no **lista, pessoa nova);
 void le_arquivo( FILE *arq, no **lista1, no **lista2, no **lista3, no **lista4 );
 void grava( no **l1, no **l2, no **l3, no **l4 );
+void encerra(no **l1, no **l2, no **l3, no **l4 );
 
 /*----------------------------------------------------------------------------
                                     MAIN:
