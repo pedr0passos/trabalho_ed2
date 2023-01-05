@@ -56,7 +56,8 @@ pessoa *le_pessoa(musicas *m);
 int calcula_meio(int ini, int fim);
 void cria_lista_musicas(musicas *m);
 void insere(no **lista, pessoa nova);
-void pega_do_arquivo( FILE *arq, no **lista1, no **lista2, no **lista3, no **lista4 );
+void le_arquivo( FILE *arq, no **lista1, no **lista2, no **lista3, no **lista4 );
+void grava( no **l1, no **l2, no **l3, no **l4 );
 
 /*----------------------------------------------------------------------------
                                     MAIN:
@@ -86,7 +87,7 @@ int main () {
     if ( arquivo != NULL )
         printf("Arquivo Aberto\n");
 
-    pega_do_arquivo(arquivo, &lista1, &lista2, &lista3, &lista4);
+    le_arquivo(arquivo, &lista1, &lista2, &lista3, &lista4);
 
     int opcao;
     while(laco) {
@@ -116,7 +117,7 @@ int main () {
         break;
         case 2:;
             limpa_terminal();
-            printf("Escolha qual categoria:\n1 - MASCULINO COM IDADE MAIOR QUE 20 | 2 - MASCULINO COM IDADE MENOR OU IGUAL A 20\n3 - FEMININO COM IDADE MAIOR QUE 20  | 4 - FEMININO COM IDADE MENOR OU IGUAL A 20\n5 - TODAS\n");
+            printf("Escolha qual categoria:\n1 - MASCULINO COM IDADE MENOR OU IGUAL A 20 | 2 - MASCULINO COM IDADE MAIOR 20\n3 - FEMININO COM IDADE MENOR OU IGUAL A 20  | 4 - FEMININO COM IDADE MAIOR 20\n5 - TODAS\n");
             printf("Escolha: ");
             scanf("%d", &opcao);
             switch (opcao) {
@@ -142,23 +143,25 @@ int main () {
                 break;
                 case 5:;
                     linha();
-                    printf("MASCULINO COM IDADE MAIOR QUE 20:\n");
-                    imprime(&lista1);
                     printf("MASCULINO COM IDADE MENOR OU IGUAL A 20:\n");
+                    imprime(&lista1);
+                    linha();
+                    printf("MASCULINO COM IDADE MAIOR QUE 20:\n");
                     imprime(&lista2);
-                    printf("FEMININO COM IDADE MAIOR QUE 20:\n");                    
+                    linha();
+                    printf("FEMININO COM IDADE MENOR OU IGUAL A 20:\n");                    
                     imprime(&lista3);
-                    printf("FEMININO COM IDADE MENOR OU IGUAL A 20:\n");
+                    linha();
+                    printf("FEMININO COM IDADE MAIOR QUE 20:\n");
                     imprime(&lista4);
                     linha();
                 break;
-            default:
-                printf("Opcao Invalida\n");
-                break;
+                default:;
+                    printf("Opcao Invalida!\n");                
             }
         break; 
         default:
-            printf("Programa Encerrado!\n");
+            encerra(&lista1, &lista2, &lista3, &lista4);
             laco = FALSE;
         break;
         }
@@ -181,16 +184,16 @@ void linha() {
     printf("-----------------------------------------------------------------------\n");
 }
 
+int vazia(no **lista) {
+    return (*lista == NULL);
+}
+
 /*----------------------------------------------------------------------------
                             FUNÇÕES DO PROGRAMA:
 ----------------------------------------------------------------------------*/
 
 void cria_lista(no **lista){
     *lista = NULL;
-}
-
-int vazia(no **lista) {
-    return (*lista == NULL);
 }
 
 pessoa *le_pessoa(musicas *m) {        
@@ -208,7 +211,7 @@ pessoa *le_pessoa(musicas *m) {
     limpa_buffer();
     scanf("%c", &novo->sexo);
 
-    printf("Musicas:\n");
+    printf("Musicas (1-30):\n");
     int i = 0;
     while (i < 5) {
         printf("%d: ",i+1);
@@ -216,8 +219,19 @@ pessoa *le_pessoa(musicas *m) {
         if ( novo->musicas[i] > 30 || novo->musicas[i] < 0 )
             printf("Valor Invalido! Tente Novamente\n");
         else {
-            adiciona_pesquisa(m, novo->musicas[i]);
-            i++;
+            int repetido = FALSE;
+            if (i > 0) {
+                for (int j = 0; j < i; j++) {
+                    if ( novo->musicas[i] == novo->musicas[j] ) {
+                        printf("Valor Repetido! Tente Novamente\n");
+                        repetido = TRUE;
+                    }
+                }                
+            } 
+            if (repetido == FALSE) {
+                adiciona_pesquisa(m, novo->musicas[i]);
+                i++;
+            }
         }
 
     }
@@ -239,7 +253,7 @@ void imprime (no **lista) {
         for (no *p = (*lista); p!= NULL; p = p->proximo )
             printf("Nome: %s | Idade: %d | Sexo: %c\n", p->p.nome, p->p.idade, p->p.sexo);
     } else {
-        printf("Lista Vazia\n");
+        printf("Lista Vazia!\n");
     }
 
 }
@@ -252,44 +266,24 @@ void cria_lista_musicas(musicas *m) {
 }
 
 void adiciona_pesquisa(musicas *m, int musica_escolhida) {
-
-    int inicio, meio, fim;
-
-    inicio = 0;
-    fim = MaxMusicas-1;
-    meio = ((inicio+fim)/2);
-
-    while ( inicio <= fim ) {
-        if ( m[meio].musica == musica_escolhida ){
-            m[meio].quantidade++;
-            break;
-        } else if (musica_escolhida > m[meio].musica ) {
-            inicio = meio+1;
-        } else {
-            fim = meio-1;
+    int i;
+    for (i = 0; i < MaxMusicas; i++) {
+        if ( m[i].musica == musica_escolhida ) {
+            m[i].quantidade++;
         }
-         meio = ((inicio+fim)/2);  
-         printf("while\n");
     }
-
 }
 
-void pega_do_arquivo( FILE *arq, no **l1, no **l2, no **l3, no **l4 ) {
+void le_arquivo( FILE *arq, no **l1, no **l2, no **l3, no **l4 ) {
     
     pessoa *p = malloc(sizeof(pessoa));
 
-    while ( fscanf(arq, "%[^\t]\t%c\t%d\t", p->nome, &p->sexo, &p->idade) != EOF ) {
+    while ( fscanf(arq, "%[^\t]\t%c\t%d\t%d %d %d %d %d\n", p->nome, &p->sexo, &p->idade, &p->musicas[0], &p->musicas[1], &p->musicas[2], &p->musicas[2], &p->musicas[3], &p->musicas[4]) != EOF ) {
 
         no *l = malloc(sizeof(no));
         int aux, i=0;
 
-        while ( fscanf(arq, "%d ", &aux) == 1 ) {
-            p->musicas[i] = aux;
-            i++;
-        }
-
         if ( (p->idade <= 20) && (strcmp(&p->sexo, "M") == 0) ) {
-            printf("Inseriu\n");
             insere(l1, *p);
         }
         if ( (p->idade > 20) && (strcmp(&p->sexo, "M") == 0) ) 
@@ -303,4 +297,21 @@ void pega_do_arquivo( FILE *arq, no **l1, no **l2, no **l3, no **l4 ) {
 
     }
 
+}
+
+void grava( no **l1, no **l2, no **l3, no **l4 ) {
+
+    FILE *arq = fopen("pesquisa.txt", "w");
+
+    for ( no *temporario = (*l1); temporario != NULL; temporario = temporario->proximo ) {
+        fprintf(arq,"%s\t%c\t%d\t%d %d %d %d %d\n", temporario->p.nome, temporario->p.sexo, temporario->p.idade, temporario->p.musicas[0], temporario->p.musicas[1], temporario->p.musicas[2], temporario->p.musicas[3], temporario->p.musicas[4]);
+    }
+
+}
+
+void encerra(no **l1, no **l2, no **l3, no **l4 ) {
+    linha();
+    printf("Programa Encerrado!\n");
+    linha();
+    grava(l1, l2, l3, l4);
 }
