@@ -366,9 +366,6 @@ void le_arquivo( FILE *arq, no **l1, no **l2, no **l3, no **l4, musicas *m1, mus
     int i;
     i = 0;
 
-    while ( fscanf(arq, "%d %d\t", &(m1[i].musica), &(m1[i].quantidade)) )
-        i++;
-    fscanf(arq, "\n");
     
 }
 
