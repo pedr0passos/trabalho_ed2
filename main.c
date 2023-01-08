@@ -74,7 +74,10 @@ int main () {
     int laco = TRUE;
 
     no *lista1, *lista2, *lista3, *lista4;
-    musicas m1[MaxMusicas], m2[MaxMusicas], m3[MaxMusicas], m4[MaxMusicas];
+    musicas *m1 = malloc(sizeof(musicas)*MaxMusicas);
+    musicas *m2 = malloc(sizeof(musicas)*MaxMusicas);
+    musicas *m3 = malloc(sizeof(musicas)*MaxMusicas);
+    musicas *m4 = malloc(sizeof(musicas)*MaxMusicas);
 
     //lista1 = Masculino que possuem idade <= 20
     //lista2 = Masculino que possuem idade > 20
@@ -100,6 +103,19 @@ int main () {
 
     le_arquivo(arquivo, &lista1, &lista2, &lista3, &lista4, m1, m2, m3, m4);
 
+    // printf("LISTA1\n");
+    // for (int i = 0; i < MaxMusicas; i++ )
+    //     printf("MUSICA: %d | QUANTIDADE: %d\n", m1[i].musica, m1[i].quantidade);
+    // printf("LISTA2\n");
+    // for (int i = 0; i < MaxMusicas; i++ )
+    //     printf("MUSICA: %d | QUANTIDADE: %d\n", m2[i].musica, m2[i].quantidade);
+    // printf("LISTA3\n");
+    // for (int i = 0; i < MaxMusicas; i++ )
+    //     printf("MUSICA: %d | QUANTIDADE: %d\n", m3[i].musica, m3[i].quantidade);
+    // printf("LISTA4\n");
+    // for (int i = 0; i < MaxMusicas; i++ )
+    //     printf("MUSICA: %d | QUANTIDADE: %d\n", m4[i].musica, m4[i].quantidade);
+
     int opcao;
     while(laco) {
         printf("1 - Adicionar a Pesquisa\n");
@@ -114,17 +130,17 @@ int main () {
             limpa_terminal();
             pessoa *p;
             p = le_pessoa(m1,m2,m3,m4);
-            
-            if ( (p->idade <= 20) && (strcmp(&p->sexo, "M") == 0) ) 
+
+            if ( (p->idade <= 20) && (p->sexo == 'M')) 
                 insere(&lista1, *p);
 
-            if ( (p->idade > 20) && (strcmp(&p->sexo, "M") == 0) ) 
+            if ( (p->idade > 20) && (p->sexo == 'M') ) 
                 insere(&lista2, *p);
 
-            if ( (p->idade <= 20) && (strcmp(&p->sexo, "F") == 0) )
+            if ( (p->idade <= 20) && (p->sexo == 'F') )
                 insere(&lista3, *p);
 
-            if ( (p->idade > 20) && (strcmp(&p->sexo, "F") == 0) )
+            if ( (p->idade > 20) && (p->sexo == 'F') )
                 insere(&lista4, *p);
 
             limpa_terminal();
@@ -269,25 +285,23 @@ pessoa *le_pessoa(musicas *m1, musicas *m2, musicas *m3, musicas *m4) {
             } 
             if (repetido == FALSE) {
 
-                if ( (novo->idade <= 20) && (strcmp(&novo->sexo,"M") == 0) )
+                if ( (novo->idade <= 20) && (novo->sexo == 'M') )
                     adiciona_pesquisa(m1, novo->musicas[i]);          
 
-                if ( (novo->idade > 20) && (strcmp(&novo->sexo,"M") == 0) )
+                if ( (novo->idade > 20) && (novo->sexo == 'M') )
                     adiciona_pesquisa(m2, novo->musicas[i]);
 
-                if ( (novo->idade <= 20) && (strcmp(&novo->sexo,"F") == 0) )
+                if ( (novo->idade <= 20) && (novo->sexo == 'F') )
                     adiciona_pesquisa(m3, novo->musicas[i]);
 
-                if ( (novo->idade > 20) && (strcmp(&novo->sexo,"F") == 0) )
+                if ( (novo->idade > 20) && (novo->sexo == 'F') )
                     adiciona_pesquisa(m4, novo->musicas[i]);
 
                 i++;
             }
         }
     }
-
     return novo;
-
 }
 
 void insere(no **lista, pessoa nova) {
@@ -344,29 +358,57 @@ void le_arquivo( FILE *arq, no **l1, no **l2, no **l3, no **l4, musicas *m1, mus
     
     pessoa *p = malloc(sizeof(pessoa));
 
-    while ( fscanf(arq, "%[^\t]\t%c\t%d\t%d %d %d %d %d\n", p->nome, &p->sexo, &p->idade, &p->musicas[0], &p->musicas[1], &p->musicas[2], &p->musicas[3], &p->musicas[4]) == 8 ) {
+    while ( fscanf(arq, "%[^\t]\t%c\t%d\t%d %d %d %d %d\n", p->nome, &p->sexo, &p->idade, &p->musicas[0], &p->musicas[1], &p->musicas[2], &p->musicas[3], &p->musicas[4]) != EOF ) {
 
         no *l = malloc(sizeof(no));
 
-        if ( (p->idade <= 20) && (strcmp(&p->sexo, "M") == 0) )
+        if ( (p->idade <= 20) && (p->sexo == 'M') ) {
             insere_do_arquivo(l1, *p);
+            for (int i = 0; i < 5; i++ )
+                adiciona_pesquisa(m1, p->musicas[i]);
+        }
 
-        if ( (p->idade > 20) && (strcmp(&p->sexo, "M") == 0) ) 
+        if ( (p->idade > 20) && (p->sexo == 'M') ) {
             insere_do_arquivo(l2, *p);
-
-        if ( (p->idade <= 20) && (strcmp(&p->sexo, "F") == 0) )
+            for (int i = 0; i < 5; i++ )
+                adiciona_pesquisa(m2, p->musicas[i]);            
+        }
+        if ( (p->idade <= 20) && (p->sexo == 'F') ) {
             insere_do_arquivo(l3, *p);
-
-        if ( (p->idade > 20) && (strcmp(&p->sexo, "F") == 0) )
+            for (int i = 0; i < 5; i++ )
+                adiciona_pesquisa(m3, p->musicas[i]);            
+        }
+        if ( (p->idade > 20) && (p->sexo == 'F') ) {
             insere_do_arquivo(l4, *p);
+            for (int i = 0; i < 5; i++ )
+                adiciona_pesquisa(m4, p->musicas[i]);    
+        }                        
+
+        int aux1, aux2;
+        int i = 0;
+
+        // if ( i<30 ) {
+        //     while ( fscanf(arq, "%d %d\t", &m1[i].musica, &m1[i].quantidade) == 2)
+        //         i++;
+        // }
+
+        // if ( (i>=30) && (i<60) ) {
+        //     while ( fscanf(arq, "%d %d\t", &m2[i].musica, &m2[i].quantidade) == 2)               
+        //         i++;
+        // }
+
+        // if ( (i>=60) && (i<90) ) {
+        //     while ( fscanf(arq, "%d %d\t", &m3[i].musica, &m3[i].quantidade) == 2)                  
+        //         i++;
+        // }           
+
+        // if ( (i>=90) && (i<120) ) {
+        //     while ( fscanf(arq, "%d %d\t", &m4[i].musica, &m4[i].quantidade) == 2) 
+        //         i++;
+        // }
 
     }
-    int auxiliar1;
-    int auxiliar2;
-    int i;
-    i = 0;
 
-    
 }
 
 void grava( no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musicas *m3, musicas *m4 ) {
@@ -390,26 +432,26 @@ void grava( no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musica
         fprintf(arq,"%s\t%c\t%d\t%d %d %d %d %d\n", temporario->p.nome, temporario->p.sexo, temporario->p.idade, temporario->p.musicas[0], temporario->p.musicas[1], temporario->p.musicas[2], temporario->p.musicas[3], temporario->p.musicas[4]);
     }
 
-    // gravando a lista de musicas 1
-    for ( int i = 0; i < MaxMusicas; i++ ) {
-        fprintf(arq, "%d %d\t", m1[i].musica, m1[i].quantidade);
-    }
-    fprintf(arq, "\n");
-    // gravando a lista de musicas 2
-    for ( int i = 0; i < MaxMusicas; i++ ) {
-        fprintf(arq, "%d %d\t", m2[i].musica, m2[i].quantidade);
-    }
-    fprintf(arq, "\n");
-    // gravando a lista de musicas 3
-    for ( int i = 0; i < MaxMusicas; i++ ) {
-        fprintf(arq, "%d %d\t", m3[i].musica, m3[i].quantidade);
-    }
-    fprintf(arq, "\n");
-    // gravando a lista de musicas 4
-    for ( int i = 0; i < MaxMusicas; i++ ) {
-        fprintf(arq, "%d %d\t", m4[i].musica, m4[i].quantidade);
-    }
-    fprintf(arq, "\n");
+    // // gravando a lista de musicas 1
+    // for ( int i = 0; i < MaxMusicas; i++ ) {
+    //     fprintf(arq, "%d %d\t", m1[i].musica, m1[i].quantidade);
+    // }
+    // // fprintf(arq, "\n");
+    // // gravando a lista de musicas 2
+    // for ( int i = 0; i < MaxMusicas; i++ ) {
+    //     fprintf(arq, "%d %d\t", m2[i].musica, m2[i].quantidade);
+    // }
+    // // fprintf(arq, "\n");
+    // // gravando a lista de musicas 3
+    // for ( int i = 0; i < MaxMusicas; i++ ) {
+    //     fprintf(arq, "%d %d\t", m3[i].musica, m3[i].quantidade);
+    // }
+    // // fprintf(arq, "\n");
+    // // gravando a lista de musicas 4
+    // for ( int i = 0; i < MaxMusicas; i++ ) {
+    //     fprintf(arq, "%d %d\t", m4[i].musica, m4[i].quantidade);
+    // }
+    // // fprintf(arq, "\n");
 }
 
 void encerra(no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musicas *m3, musicas *m4 ) {
@@ -425,9 +467,11 @@ void imprime_musicas(musicas *m1, musicas *m2, musicas *m3, musicas *m4, int tam
     printf("MUSICAS MAIS POPULARES DE CADA CATEGORIA:\n\n");
     linha();
     printf("MASCULINO MENOR OU IGUAL A 20 ANOS:\n");
-    for ( int i = 0; i < tamanho; i++ ) 
+    for ( int i = 0; i < tamanho; i++ ) {
         if (m1[i].quantidade > 0 )
             printf("Musica: %d | Quantidade: %d\n", m1[i].musica, m1[i].quantidade);
+    }
+
     linha();
     printf("MASCULINO MAIOR QUE 20 ANOS:\n");
     for ( int i = 0; i < tamanho; i++ ) 
