@@ -1,3 +1,4 @@
+Alexandre	M	16	9 3 6 7 1
 Ruan	M	14	14 3 1 6 7
 Guilherme	M	2	2 3 9 10 11
 Gustavo	M	11	8 30 11 4 1

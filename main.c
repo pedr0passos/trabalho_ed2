@@ -565,27 +565,53 @@ void ordena (musicas *m1, musicas *m2, musicas *m3, musicas *m4, int tamanho) {
 }
 
 void lista_top3(no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musicas *m3, musicas *m4, no **n1, no **n2, no **n3, no **n4) {
-    pessoa *nova = malloc(sizeof(pessoa));
+    
+    pessoa nova;
     ordena(m1,m2,m3,m4, MaxMusicas);
+    no *aux;
+    
+    for ( aux = (*l1); aux != NULL; aux = aux->proximo ) {
+        if ( !esta_na_lista(n1, aux->p) && esta_no_top3(aux->p, m1) ) {
+            strcpy(nova.nome, aux->p.nome);
+            insere(n1, nova);
+        }
+    }
 
-    for (no *p = *l1; p != NULL; p = p->proximo )
-        if ( p->p.musicas[0] == m1[0].musica || p->p.musicas[0] == m1[1].musica || p->p.musicas[0] == m1[2].musica ) {
-            *nova->nome = p->p.nome;
-            insere(n1, *nova);
+    for ( aux = (*l2); aux != NULL; aux = aux->proximo ) {
+        if ( !esta_na_lista(n2, aux->p) && esta_no_top3(aux->p, m2) ) {
+            strcpy(nova.nome, aux->p.nome);
+            insere(n2, nova);
         }
-    for (no *p = *l2; p != NULL; p = p->proximo )
-        if ( p->p.musicas[0] == m2[0].musica || p->p.musicas[0] == m2[1].musica || p->p.musicas[0] == m2[2].musica ) {
-            *nova->nome = p->p.nome;
-            insere(n2, *nova);
+    }
+
+    for ( aux = (*l3); aux != NULL; aux = aux->proximo ) {
+        if ( !esta_na_lista(n3, aux->p) && esta_no_top3(aux->p, m3) ) {
+            strcpy(nova.nome, aux->p.nome);
+            insere(n3, nova);
         }
-    for (no *p = *l3; p != NULL; p = p->proximo )
-        if ( p->p.musicas[0] == m3[0].musica || p->p.musicas[0] == m3[1].musica || p->p.musicas[0] == m3[2].musica ) {
-            *nova->nome = p->p.nome;
-            insere(n3, *nova);
+    }
+
+    for ( aux = (*l4); aux != NULL; aux = aux->proximo ) {
+        if ( !esta_na_lista(n4, aux->p) && esta_no_top3(aux->p, m4) ) {
+            strcpy(nova.nome, aux->p.nome);
+            insere(n4, nova);
         }
-    for (no *p = *l4; p != NULL; p = p->proximo )
-        if ( p->p.musicas[0] == m4[0].musica || p->p.musicas[0] == m4[1].musica || p->p.musicas[0] == m4[2].musica ) {
-            *nova->nome = p->p.nome;
-            insere(n4, *nova);  
-        }
+    }
+
+}
+
+
+int esta_na_lista( no **lista, pessoa p ) {
+    if (vazia(lista))
+        return FALSE;
+    for (no*aux = (*lista); aux != NULL; aux = aux->proximo ) 
+        if ( strcmp(aux->p.nome, p.nome) == 0 )
+            return TRUE;
+    return FALSE;
+}
+
+int esta_no_top3( pessoa p, musicas *m ) {
+    if (p.musicas[0] == m[0].musica || p.musicas[0] == m[1].musica || p.musicas[0] == m[2].musica )
+        return TRUE;
+    return FALSE;
 }
