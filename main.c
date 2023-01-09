@@ -64,6 +64,7 @@ int decrementa(int numero);
 void shellsort(musicas *m, int t);
 int calcula_h(int numero, int tamanho);
 void ordena (musicas *m1, musicas *m2, musicas *m3, musicas *m4, int tamanho);
+void lista_top3(no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musicas *m3, musicas *m4,  no **n1, no **n2, no **n3, no **n4);
 
 /*----------------------------------------------------------------------------
                                     MAIN:
@@ -74,10 +75,6 @@ int main () {
     int laco = TRUE;
 
     no *lista1, *lista2, *lista3, *lista4;
-    musicas *m1 = malloc(sizeof(musicas)*MaxMusicas);
-    musicas *m2 = malloc(sizeof(musicas)*MaxMusicas);
-    musicas *m3 = malloc(sizeof(musicas)*MaxMusicas);
-    musicas *m4 = malloc(sizeof(musicas)*MaxMusicas);
 
     //lista1 = Masculino que possuem idade <= 20
     //lista2 = Masculino que possuem idade > 20
@@ -89,12 +86,22 @@ int main () {
     cria_lista(&lista3);
     cria_lista(&lista4);
 
-    // 4 listas de musicas, gravam o resultado das musicas favoritas de cada categoria
+    musicas *m1 = malloc(sizeof(musicas)*MaxMusicas);
+    musicas *m2 = malloc(sizeof(musicas)*MaxMusicas);
+    musicas *m3 = malloc(sizeof(musicas)*MaxMusicas);
+    musicas *m4 = malloc(sizeof(musicas)*MaxMusicas);
 
     cria_lista_musicas(m1);
     cria_lista_musicas(m2);
     cria_lista_musicas(m3);
     cria_lista_musicas(m4);
+
+    // Quatro listas separadas com o nome e o sobrenome de todos os pesquisados que tenham mencionado em primeiro lugar uma das três músicas mais populares na categoria.
+    no *nome_pesquisados1, *nome_pesquisados2, *nome_pesquisados3, *nome_pesquisados4;
+    cria_lista(&nome_pesquisados1);
+    cria_lista(&nome_pesquisados2);
+    cria_lista(&nome_pesquisados3);
+    cria_lista(&nome_pesquisados4);
 
     FILE *arquivo = fopen("pesquisa.txt", "r");
     
@@ -122,7 +129,8 @@ int main () {
         printf("2 - Imprimir Pesquisa\n");
         printf("3 - Musicas\n");
         printf("4 - Imprimir Top 3 Musicas mais Populares\n");
-        printf("5 - Sair\n");        
+        printf("5 - Nomes das Pessoas Que Mencionaram o Top3 como Primeira Musica\n");
+        printf("6 - Sair\n");        
         printf("OPCAO: ");
         scanf("%d", &opcao);
         switch (opcao) {
@@ -200,7 +208,15 @@ int main () {
             imprime_top3(m1,m2,m3,m4, MaxMusicas);
             linha();
         break;
-        case 5:;    // encerra o programa
+        case 5:;
+            limpa_terminal();
+            lista_top3(&lista1, &lista2, &lista3, &lista4, m1, m2, m3, m4, &nome_pesquisados1, &nome_pesquisados2, &nome_pesquisados3, &nome_pesquisados4);
+            imprime(&nome_pesquisados1);
+            imprime(&nome_pesquisados2);
+            imprime(&nome_pesquisados3);
+            imprime(&nome_pesquisados4);
+        break;
+        case 6:;    // encerra o programa
             encerra(&lista1, &lista2, &lista3, &lista4, m1, m2, m3, m4);
             laco = FALSE;
         break;
@@ -546,4 +562,30 @@ void ordena (musicas *m1, musicas *m2, musicas *m3, musicas *m4, int tamanho) {
     shellsort(m2, tamanho);
     shellsort(m3, tamanho);
     shellsort(m4, tamanho);
+}
+
+void lista_top3(no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musicas *m3, musicas *m4, no **n1, no **n2, no **n3, no **n4) {
+    pessoa *nova = malloc(sizeof(pessoa));
+    ordena(m1,m2,m3,m4, MaxMusicas);
+
+    for (no *p = *l1; p != NULL; p = p->proximo )
+        if ( p->p.musicas[0] == m1[0].musica || p->p.musicas[0] == m1[1].musica || p->p.musicas[0] == m1[2].musica ) {
+            *nova->nome = p->p.nome;
+            insere(n1, *nova);
+        }
+    for (no *p = *l2; p != NULL; p = p->proximo )
+        if ( p->p.musicas[0] == m2[0].musica || p->p.musicas[0] == m2[1].musica || p->p.musicas[0] == m2[2].musica ) {
+            *nova->nome = p->p.nome;
+            insere(n2, *nova);
+        }
+    for (no *p = *l3; p != NULL; p = p->proximo )
+        if ( p->p.musicas[0] == m3[0].musica || p->p.musicas[0] == m3[1].musica || p->p.musicas[0] == m3[2].musica ) {
+            *nova->nome = p->p.nome;
+            insere(n3, *nova);
+        }
+    for (no *p = *l4; p != NULL; p = p->proximo )
+        if ( p->p.musicas[0] == m4[0].musica || p->p.musicas[0] == m4[1].musica || p->p.musicas[0] == m4[2].musica ) {
+            *nova->nome = p->p.nome;
+            insere(n4, *nova);  
+        }
 }

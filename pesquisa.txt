@@ -1,0 +1,13 @@
+Ruan	M	14	14 3 1 6 7
+Guilherme	M	2	2 3 9 10 11
+Gustavo	M	11	8 30 11 4 1
+Henrique	M	18	1 9 29 13 22
+Pedro	M	12	4 9 17 1 20
+Iago	M	90	30 1 18 5 8
+Thiago	M	44	30 2 9 10 4
+Natalia	F	9	30 10 9 17 24
+Camily	F	20	20 29 13 18 11
+Maria	F	7	10 9 8 12 14
+Kiara	F	49	2 5 23 27 15
+Suiani	F	41	5 9 11 4 17
+Juliana	F	67	3 4 20 11 30
