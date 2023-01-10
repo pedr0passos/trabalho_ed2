@@ -24,7 +24,7 @@
 ----------------------------------------------------------------------------*/
 
 typedef struct p {
-    char nome[100];
+    char nome[256];
     char sexo;
     int idade;
     int musicas[5];
