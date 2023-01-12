@@ -1,14 +1,12 @@
-Alexandre	M	16	9 3 6 7 1
-Ruan	M	14	14 3 1 6 7
-Guilherme	M	2	2 3 9 10 11
-Gustavo	M	11	8 30 11 4 1
-Henrique	M	18	1 9 29 13 22
-Pedro	M	12	4 9 17 1 20
-Iago	M	90	30 1 18 5 8
-Thiago	M	44	30 2 9 10 4
-Natalia	F	9	30 10 9 17 24
-Camily	F	20	20 29 13 18 11
-Maria	F	7	10 9 8 12 14
-Kiara	F	49	2 5 23 27 15
-Suiani	F	41	5 9 11 4 17
-Juliana	F	67	3 4 20 11 30
+Joao Vitor	M	11	9 1 3 20 25
+Pedro	M	17	3 12 19 30 1
+Henrique	M	9	9 10 18 21 3
+Gustavo	M	23	3 1 11 16 17
+Guilherme	M	29	30 1 7 24 27
+Ruan	M	50	4 8 11 22 21
+Juliana	F	10	17 11 13 19 27
+Leticia	F	19	2 9 14 17 23
+Catterina	F	15	30 6 9 3 7
+Maria	F	29	30 13 16 4 8
+Eduarda	F	34	4 8 10 11 23
+Kiara	F	45	30 24 1 9 13
