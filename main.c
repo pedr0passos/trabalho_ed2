@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <locale.h>
 #include <string.h>
 
 // caminho : C:\Users\rocha\GitHub\trabalho_ed2
@@ -36,30 +35,38 @@ typedef struct m {
 
 void linha();
 void limpa_buffer();
-int vazia(no **lista);
 void limpa_terminal();
-void imprime(no **lista);
+
 void cria_lista(no **lista);
-void adiciona_voto (musicas *m, int musica_escolhida);
-pessoa *le_pessoa(musicas *m1, musicas *m2, musicas *m3, musicas *m4);
 void cria_lista_musicas(musicas *m);
-void insere(no **lista, pessoa nova);
-void le_arquivo(FILE *arq1, FILE *arq2, no **lista1, no **lista2, no **lista3, no **lista4, musicas *m1, musicas *m2, musicas *m3, musicas *m4);
-void grava(no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musicas *m3, musicas *m4);
-void encerra(no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musicas *m3, musicas *m4);
-void insere_do_arquivo(no **lista, pessoa nova);
+void lista_top3(no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musicas *m3, musicas *m4,  no **n1, no **n2, no **n3, no **n4);
+
+void imprime(no **lista);
 void imprime_musicas(musicas *m1, musicas *m2, musicas *m3, musicas *m4, int tamanho);
 void imprime_top3(musicas *m1, musicas *m2, musicas *m3, musicas *m4, int tamanho);
+
+pessoa *le_pessoa(musicas *m1, musicas *m2, musicas *m3, musicas *m4);
+
+void insere(no **lista, pessoa nova);
+void insere_do_arquivo(no **lista, pessoa nova);
+
+void le_arquivo(FILE *arq1, FILE *arq2, no **lista1, no **lista2, no **lista3, no **lista4, musicas *m1, musicas *m2, musicas *m3, musicas *m4);
+void grava(no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musicas *m3, musicas *m4);
+
 int decrementa(int numero);
 void shellsort(musicas *m, int t);
 int calcula_h(int numero, int tamanho);
 void ordena(musicas *m1, musicas *m2, musicas *m3, musicas *m4, int tamanho);
-void lista_top3(no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musicas *m3, musicas *m4,  no **n1, no **n2, no **n3, no **n4);
+
+int vazia(no **lista);
 void libera_lista(no **lista);
+void adiciona_voto (musicas *m, int musica_escolhida);
 int masculino(pessoa p);
 int feminino(pessoa p);
 int menor_igual_20(pessoa p);
 int maior_20(pessoa p);
+
+void encerra(no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musicas *m3, musicas *m4);
 
 /*----------------------------------------------------------------------------
                                     MAIN:
@@ -124,7 +131,6 @@ int main () {
         linha();     
         printf("OPCAO: ");
         scanf("%d", &opcao);
-
         switch (opcao) {
         case 1:;
             limpa_terminal();
@@ -147,8 +153,8 @@ int main () {
         break;
         case 2:;
             limpa_terminal();
+            laco2 = TRUE;
             while (laco2) {
-                laco2 = FALSE;
                 printf("Escolha qual categoria:\n");
                 printf("1 - MASCULINO COM IDADE MENOR OU IGUAL A 20\n");
                 printf("2 - MASCULINO COM IDADE MAIOR 20\n");
@@ -156,7 +162,7 @@ int main () {
                 printf("4 - FEMININO COM IDADE MAIOR 20\n");
                 printf("5 - TODAS\n");
                 printf("6 - SAIR\n");
-                printf(">>");
+                printf("Escolha: ");
                 scanf("%d", &opcao);
                 switch (opcao) {
                     case 1:;   
@@ -203,6 +209,7 @@ int main () {
             imprime_musicas(m1,m2,m3,m4, MaxMusicas);
         break;
         case 4:;
+            limpa_terminal();
             linha();
             imprime_top3(m1,m2,m3,m4, MaxMusicas);
         break;
@@ -215,10 +222,12 @@ int main () {
             imprime_pesquisados_top3(&nome_pesquisados4);
         break;
         case 6:;
+            limpa_terminal();
             encerra(&lista1, &lista2, &lista3, &lista4, m1, m2, m3, m4);
             laco1 = FALSE;
         break;
         default:;
+            limpa_terminal();
             printf("Opcao Invalida!\n");
         }
     } 
@@ -412,20 +421,20 @@ void imprime_musicas(musicas *m1, musicas *m2, musicas *m3, musicas *m4, int tam
     printf("MUSICAS MAIS POPULARES DE CADA CATEGORIA:\n");
     linha();
     printf("MASCULINO MENOR OU IGUAL A 20 ANOS:\n");
+    imprimiu = FALSE;
     for ( i = 0; i < tamanho; i++ ) {
-        imprimiu = FALSE;
         if (m1[i].votos > 0 ) {
             printf("Musica: %d | Votos: %d\n", m1[i].musica, m1[i].votos);
             imprimiu = TRUE;
         }
     }
-    if (!imprimiu && i == tamanho && i == tamanho)
+    if (!imprimiu && i == tamanho)
         printf("Lista Vazia, Nenhum Voto!\n");
 
     linha();
     printf("MASCULINO MAIOR QUE 20 ANOS:\n");
+    imprimiu = FALSE;
     for ( i = 0; i < tamanho; i++ ) {
-        imprimiu = FALSE;
         if (m2[i].votos > 0 ) {
             printf("Musica: %d | Votos: %d\n", m2[i].musica, m2[i].votos);
             imprimiu = TRUE;
@@ -436,8 +445,8 @@ void imprime_musicas(musicas *m1, musicas *m2, musicas *m3, musicas *m4, int tam
 
     linha();
     printf("FEMININO MENOR OU IGUAL A 20 ANOS:\n");
+    imprimiu = FALSE;
     for ( i = 0; i < tamanho; i++ ) {
-        imprimiu = FALSE;
         if (m3[i].votos > 0 ) {            
             printf("Musica: %d | Votos: %d\n", m3[i].musica, m3[i].votos);
             imprimiu = TRUE;
@@ -448,8 +457,8 @@ void imprime_musicas(musicas *m1, musicas *m2, musicas *m3, musicas *m4, int tam
 
     linha();
     printf("FEMININO MAIOR QUE 20 ANOS:\n");
+    imprimiu = FALSE;
     for ( i = 0; i < tamanho; i++ ) {
-        imprimiu = FALSE;
         if (m4[i].votos > 0 ) {
             printf("Musica: %d | Votos: %d\n", m4[i].musica, m4[i].votos);
             imprimiu = TRUE;
@@ -462,7 +471,7 @@ void imprime_musicas(musicas *m1, musicas *m2, musicas *m3, musicas *m4, int tam
 
 void imprime_top3(musicas *m1, musicas *m2, musicas *m3, musicas *m4, int tamanho) {
     ordena(m1,m2,m3,m4,MaxMusicas);
-    printf("TOP 3 MUSICAS MAIS POPULARES DE CADA CATEGORIA:\n\n");
+    printf("TOP 3 MUSICAS MAIS POPULARES DE CADA CATEGORIA:\n");
     linha();
     printf("MASCULINO MENOR OU IGUAL A 20 ANOS:\n");
     for ( int i = 0; i < 3; i++ ) 
