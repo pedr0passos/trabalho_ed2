@@ -545,7 +545,7 @@ pessoa *le_pessoa(musicas *m1, musicas *m2, musicas *m3, musicas *m4) {
     while (i < 5) {
         printf("%d: ",i+1);
         scanf("%d", &novo->musicas[i]);
-        if ( novo->musicas[i] > 30 || novo->musicas[i] < 0 )
+        if ( novo->musicas[i] < 1 || novo->musicas[i] > 30 )
             printf("Valor Invalido! Tente Novamente\n");
         else {
             int repetido = FALSE;
