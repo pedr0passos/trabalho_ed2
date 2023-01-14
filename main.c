@@ -155,6 +155,7 @@ int main () {
             limpa_terminal();
             laco2 = TRUE;
             while (laco2) {
+                linha();
                 printf("Escolha qual categoria:\n");
                 printf("1 - MASCULINO COM IDADE MENOR OU IGUAL A 20\n");
                 printf("2 - MASCULINO COM IDADE MAIOR 20\n");
@@ -162,22 +163,27 @@ int main () {
                 printf("4 - FEMININO COM IDADE MAIOR 20\n");
                 printf("5 - TODAS\n");
                 printf("6 - SAIR\n");
+                linha();
                 printf("Escolha: ");
                 scanf("%d", &opcao);
                 switch (opcao) {
                     case 1:;   
+                        limpa_terminal();
                         linha();
                         imprime(&lista1);
                     break;
                     case 2:;
+                        limpa_terminal();
                         linha();
                         imprime(&lista2);
                     break;                    
                     case 3:;
+                        limpa_terminal();
                         linha();
                         imprime(&lista3);
                     break;
                     case 4:;
+                        limpa_terminal();
                         linha();
                         imprime(&lista4);
                     break;
@@ -195,8 +201,10 @@ int main () {
                         linha();
                         printf("FEMININO COM IDADE MAIOR QUE 20:\n");
                         imprime(&lista4);
+                    break;
                     case 6:;
                         laco2 = FALSE;
+                        limpa_terminal();
                     break;
                     default:;
                         printf("Opcao Invalida!\n");                
@@ -216,9 +224,17 @@ int main () {
         case 5:;
             limpa_terminal();
             lista_top3(&lista1, &lista2, &lista3, &lista4, m1, m2, m3, m4, &nome_pesquisados1, &nome_pesquisados2, &nome_pesquisados3, &nome_pesquisados4);
+            linha();
+            printf("MASCULINO COM IDADE MENOR OU IGUAL A 20:\n");
             imprime_pesquisados_top3(&nome_pesquisados1);
+            linha();
+            printf("MASCULINO COM IDADE MENOR QUE 20:\n");
             imprime_pesquisados_top3(&nome_pesquisados2);
+            linha();
+            printf("FEMININO COM IDADE MENOR OU IGUAL A 20:\n");
             imprime_pesquisados_top3(&nome_pesquisados3);
+            linha();
+            printf("FEMININO COM IDADE MENOR QUE 20:\n");
             imprime_pesquisados_top3(&nome_pesquisados4);
         break;
         case 6:;
@@ -281,6 +297,12 @@ int maior_20(pessoa p) {
     return FALSE;
 }
 
+int esta_no_top3( pessoa p, musicas *m ) {
+    if (p.musicas[0] == m[0].musica || p.musicas[0] == m[1].musica || p.musicas[0] == m[2].musica )
+        return TRUE;
+    return FALSE;
+}
+
 // Funções que Ajudam o Algoritmo de Ordenação
 int decrementa(int numero) {
     numero = (numero-1)/3;
@@ -314,7 +336,6 @@ void libera_lista(no **lista) {
     for ( p = *lista; p != NULL; p = p->proximo ) {
         temp = p->proximo;
         free(p);
-        printf("Lista Vazia");
     } 
     *lista = NULL;
 }
@@ -346,23 +367,31 @@ void lista_top3(no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, mu
     libera_lista(n4);
     
     for ( no *aux = (*l1); aux != NULL; aux = aux->proximo ) {
+        if (esta_no_top3(aux->p, m1)) {
             strcpy(nova.nome, aux->p.nome);
             insere(n1, nova);
+        }
     }
 
     for ( no *aux = (*l2); aux != NULL; aux = aux->proximo ) {
+        if (esta_no_top3(aux->p, m2)) {
             strcpy(nova.nome, aux->p.nome);
             insere(n2, nova);
+        }
     }
 
     for ( no *aux = (*l3); aux != NULL; aux = aux->proximo ) {
+        if (esta_no_top3(aux->p, m3)) {
             strcpy(nova.nome, aux->p.nome);
             insere(n3, nova);
+        }
     }
 
     for ( no *aux = (*l4); aux != NULL; aux = aux->proximo ) {
+        if (esta_no_top3(aux->p, m4)) {
             strcpy(nova.nome, aux->p.nome);
             insere(n4, nova);
+        }
     }
 
 }
