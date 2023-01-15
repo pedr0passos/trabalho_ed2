@@ -43,6 +43,7 @@ void lista_top3(no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, mu
 
 void imprime(no **lista);
 void imprime_musicas(musicas *m1, musicas *m2, musicas *m3, musicas *m4, int tamanho);
+void imprime_pesquisados_top3(no **lista);
 void imprime_top3(musicas *m1, musicas *m2, musicas *m3, musicas *m4, int tamanho);
 
 pessoa *le_pessoa(musicas *m1, musicas *m2, musicas *m3, musicas *m4);
