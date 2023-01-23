@@ -39,19 +39,18 @@ void limpa_terminal();
 
 void cria_lista(no **lista);
 void cria_lista_musicas(musicas *m);
-void lista_top3(no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musicas *m3, musicas *m4,  no **n1, no **n2, no **n3, no **n4);
+void cria_lista_top3(no **lista, musicas *musica,  no **nomes);
 
 void imprime(no **lista);
-void imprime_musicas(musicas *m1, musicas *m2, musicas *m3, musicas *m4, int tamanho);
+void imprime_musicas(musicas *m, int tamanho);
 void imprime_pesquisados_top3(no **lista);
-void imprime_top3(musicas *m1, musicas *m2, musicas *m3, musicas *m4, int tamanho);
 
 pessoa *le_pessoa(musicas *m1, musicas *m2, musicas *m3, musicas *m4);
 
 void insere(no **lista, pessoa nova);
 void insere_do_arquivo(no **lista, pessoa nova);
 
-void le_arquivo(FILE *arq1, FILE *arq2, no **lista1, no **lista2, no **lista3, no **lista4, musicas *m1, musicas *m2, musicas *m3, musicas *m4);
+void le_arquivo(no **lista1, no **lista2, no **lista3, no **lista4, musicas *m1, musicas *m2, musicas *m3, musicas *m4);
 void grava(no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musicas *m3, musicas *m4);
 
 int decrementa(int numero);
@@ -107,28 +106,17 @@ int main () {
     cria_lista(&nome_pesquisados2);
     cria_lista(&nome_pesquisados3);
     cria_lista(&nome_pesquisados4);
-
-    // abertura dos arquivos
-    FILE *arquivo_pesquisa = fopen("pesquisa.txt", "r");
-    FILE *arquivo_musicas = fopen("musicas.txt", "r");
     
-    if (arquivo_pesquisa == NULL)
-        printf("Erro Abertura do Arquivo de Pesquisa\n");
-    if (arquivo_musicas == NULL)
-        printf("Erro Abertura do Arquivo de Musicas\n");
-
-    le_arquivo(arquivo_pesquisa, arquivo_musicas, &lista1, &lista2, &lista3, &lista4, m1, m2, m3, m4);
+    le_arquivo(&lista1, &lista2, &lista3, &lista4, m1, m2, m3, m4);
 
     int opcao;
-    char resposta;
     while(laco1) {
         linha();
         printf("1 - Adicionar a Pesquisa\n");
         printf("2 - Imprimir Pesquisa\n");
         printf("3 - Musicas\n");
-        printf("4 - Imprimir Top 3 Musicas mais Populares\n");
-        printf("5 - Nomes das Pessoas Que Mencionaram o Top3 como Primeira Musica\n");
-        printf("6 - Sair\n");   
+        printf("4 - Nomes das Pessoas Que Mencionaram o Top3 como Primeira Musica\n");
+        printf("5 - Sair\n");   
         linha();     
         printf("OPCAO: ");
         scanf("%d", &opcao);
@@ -215,16 +203,28 @@ int main () {
         case 3:;
             limpa_terminal();
             linha();
-            imprime_musicas(m1,m2,m3,m4, MaxMusicas);
+            printf("MUSICAS MAIS POPULARES DE CADA CATEGORIA:\n");
+            linha();
+            printf("MASCULINO COM IDADE MENOR OU IGUAL A 20:\n\n");
+            imprime_musicas(m1, MaxMusicas);
+            linha();
+            printf("MASCULINO COM IDADE MAIOR QUE 20:\n\n");
+            imprime_musicas(m2, MaxMusicas);
+            linha();
+            printf("FEMININO COM IDADE MENOR OU IGUAL A 20:\n\n");
+            imprime_musicas(m3, MaxMusicas);
+            linha();
+            printf("FEMININO COM IDADE MAIOR QUE 20:\n\n");
+            imprime_musicas(m4, MaxMusicas);
         break;
         case 4:;
             limpa_terminal();
-            linha();
-            imprime_top3(m1,m2,m3,m4, MaxMusicas);
-        break;
-        case 5:;
-            limpa_terminal();
-            lista_top3(&lista1, &lista2, &lista3, &lista4, m1, m2, m3, m4, &nome_pesquisados1, &nome_pesquisados2, &nome_pesquisados3, &nome_pesquisados4);
+            
+            cria_lista_top3(&lista1, m1, &nome_pesquisados1);
+            cria_lista_top3(&lista2, m2, &nome_pesquisados2);
+            cria_lista_top3(&lista3, m3, &nome_pesquisados3);
+            cria_lista_top3(&lista4, m4, &nome_pesquisados4);
+
             linha();
             printf("MASCULINO COM IDADE MENOR OU IGUAL A 20:\n");
             imprime_pesquisados_top3(&nome_pesquisados1);
@@ -238,7 +238,7 @@ int main () {
             printf("FEMININO COM IDADE MENOR QUE 20:\n");
             imprime_pesquisados_top3(&nome_pesquisados4);
         break;
-        case 6:;
+        case 5:;
             limpa_terminal();
             encerra(&lista1, &lista2, &lista3, &lista4, m1, m2, m3, m4);
             laco1 = FALSE;
@@ -357,43 +357,18 @@ void cria_lista_musicas(musicas *m) {
     }
 }
 
-void lista_top3(no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musicas *m3, musicas *m4, no **n1, no **n2, no **n3, no **n4) {
+void cria_lista_top3(no **lista, musicas *musica, no **nomes) {
     
     pessoa nova;
 
-    ordena(m1,m2,m3,m4, MaxMusicas);
-    libera_lista(n1);
-    libera_lista(n2);
-    libera_lista(n3);
-    libera_lista(n4);
+    shellsort(musica,MaxMusicas);
+    libera_lista(nomes);
     
-    for ( no *aux = (*l1); aux != NULL; aux = aux->proximo ) {
-        if (esta_no_top3(aux->p, m1)) {
+    for ( no *aux = (*lista); aux != NULL; aux = aux->proximo )
+        if (esta_no_top3(aux->p, musica)) {
             strcpy(nova.nome, aux->p.nome);
-            insere(n1, nova);
+            insere(nomes, nova);
         }
-    }
-
-    for ( no *aux = (*l2); aux != NULL; aux = aux->proximo ) {
-        if (esta_no_top3(aux->p, m2)) {
-            strcpy(nova.nome, aux->p.nome);
-            insere(n2, nova);
-        }
-    }
-
-    for ( no *aux = (*l3); aux != NULL; aux = aux->proximo ) {
-        if (esta_no_top3(aux->p, m3)) {
-            strcpy(nova.nome, aux->p.nome);
-            insere(n3, nova);
-        }
-    }
-
-    for ( no *aux = (*l4); aux != NULL; aux = aux->proximo ) {
-        if (esta_no_top3(aux->p, m4)) {
-            strcpy(nova.nome, aux->p.nome);
-            insere(n4, nova);
-        }
-    }
 
 }
 
@@ -426,102 +401,34 @@ void insere_do_arquivo(no **lista, pessoa nova) {
 // Funções de Imprimir
 void imprime (no **lista) {
 
-    if (!vazia(lista)) {
+    if (!vazia(lista))
         for (no *p = (*lista); p!= NULL; p = p->proximo )
             printf("Nome: %s | Idade: %d | Sexo: %c | Musicas: %d %d %d %d %d\n", p->p.nome, p->p.idade, p->p.sexo, p->p.musicas[0], p->p.musicas[1], p->p.musicas[2], p->p.musicas[3], p->p.musicas[4]);
-    } else {
+    else 
         printf("Lista Vazia!\n");
-    }
-
 }
 
 void imprime_pesquisados_top3(no **lista) {
-    if (!vazia(lista)) {
+    if (!vazia(lista))
         for (no *p = (*lista); p!= NULL; p = p->proximo )
-            printf("Nome: %s\n", p->p.nome);
-    } else {
-        printf("Lista Vazia!\n");
-    }    
+            printf("Nome Completo: %s\n", p->p.nome);
+    else
+        printf("Lista Vazia!\n");    
 }
 
-void imprime_musicas(musicas *m1, musicas *m2, musicas *m3, musicas *m4, int tamanho) {
-    ordena(m1,m2,m3,m4,MaxMusicas);
+void imprime_musicas(musicas *m, int tamanho) {
     int imprimiu;
     int i;
-    printf("MUSICAS MAIS POPULARES DE CADA CATEGORIA:\n");
-    linha();
-    printf("MASCULINO MENOR OU IGUAL A 20 ANOS:\n");
     imprimiu = FALSE;
-    for ( i = 0; i < tamanho; i++ ) {
-        if (m1[i].votos > 0 ) {
-            printf("Musica: %d | Votos: %d\n", m1[i].musica, m1[i].votos);
+    for ( i = 0; i < tamanho; i++ )
+        if (m[i].votos > 0 ) {
+            printf("Musica: %d | Votos: %d\n", m[i].musica, m[i].votos);
             imprimiu = TRUE;
         }
-    }
+
     if (!imprimiu && i == tamanho)
         printf("Lista Vazia, Nenhum Voto!\n");
 
-    linha();
-    printf("MASCULINO MAIOR QUE 20 ANOS:\n");
-    imprimiu = FALSE;
-    for ( i = 0; i < tamanho; i++ ) {
-        if (m2[i].votos > 0 ) {
-            printf("Musica: %d | Votos: %d\n", m2[i].musica, m2[i].votos);
-            imprimiu = TRUE;
-        }
-    }
-    if (!imprimiu && i == tamanho)
-        printf("Lista Vazia, Nenhum Voto!\n");
-
-    linha();
-    printf("FEMININO MENOR OU IGUAL A 20 ANOS:\n");
-    imprimiu = FALSE;
-    for ( i = 0; i < tamanho; i++ ) {
-        if (m3[i].votos > 0 ) {            
-            printf("Musica: %d | Votos: %d\n", m3[i].musica, m3[i].votos);
-            imprimiu = TRUE;
-        }
-    }
-    if (!imprimiu && i == tamanho)
-        printf("Lista Vazia, Nenhum Voto!\n");
-
-    linha();
-    printf("FEMININO MAIOR QUE 20 ANOS:\n");
-    imprimiu = FALSE;
-    for ( i = 0; i < tamanho; i++ ) {
-        if (m4[i].votos > 0 ) {
-            printf("Musica: %d | Votos: %d\n", m4[i].musica, m4[i].votos);
-            imprimiu = TRUE;
-        }
-    }
-    if (!imprimiu && i == tamanho)
-        printf("Lista Vazia, Nenhum Voto!\n");
-
-}
-
-void imprime_top3(musicas *m1, musicas *m2, musicas *m3, musicas *m4, int tamanho) {
-    ordena(m1,m2,m3,m4,MaxMusicas);
-    printf("TOP 3 MUSICAS MAIS POPULARES DE CADA CATEGORIA:\n");
-    linha();
-    printf("MASCULINO MENOR OU IGUAL A 20 ANOS:\n");
-    for ( int i = 0; i < 3; i++ ) 
-        if (m1[i].votos > 0 )
-            printf("TOP %d | Musica: %d | Votos: %d\n",(i+1), m1[i].musica, m1[i].votos);
-    linha();
-    printf("MASCULINO MAIOR QUE 20 ANOS:\n");
-    for ( int i = 0; i < 3; i++ ) 
-        if (m2[i].votos > 0 )
-            printf("TOP %d | Musica: %d | Votos: %d\n",(i+1), m2[i].musica, m2[i].votos);
-    linha();
-    printf("FEMININO MENOR OU IGUAL A 20 ANOS:\n");
-    for ( int i = 0; i < 3; i++ ) 
-        if (m3[i].votos > 0 )
-            printf("TOP %d | Musica: %d | Votos: %d\n",(i+1), m3[i].musica, m3[i].votos);
-    linha();
-    printf("FEMININO MAIOR QUE 20 ANOS:\n");
-    for ( int i = 0; i < 3; i++ ) 
-        if (m4[i].votos > 0 )
-            printf("TOP %d | Musica: %d | Votos: %d\n",(i+1), m4[i].musica, m4[i].votos);
 }
 
 // Função de Leitura
@@ -580,35 +487,28 @@ pessoa *le_pessoa(musicas *m1, musicas *m2, musicas *m3, musicas *m4) {
 }
 
 // Funções do Arquivo ( Leitura e Gravacao )
-void le_arquivo( FILE *arq1, FILE *arq2, no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musicas *m3, musicas *m4 ) {
+void le_arquivo(no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musicas *m3, musicas *m4 ) {
     
     pessoa *p = malloc(sizeof(pessoa));
 
-    while ( fscanf(arq1, "%[^\t]\t%c\t%d\t%d %d %d %d %d\n", p->nome, &p->sexo, &p->idade, &p->musicas[0], &p->musicas[1], &p->musicas[2], &p->musicas[3], &p->musicas[4]) != EOF ) {
+    FILE *arquivo_pesquisa = fopen("pesquisa.txt", "r");
+    FILE *arquivo_musicas = fopen("musicas.txt", "r");
+
+    while ( fscanf(arquivo_pesquisa, "%[^\t]\t%c\t%d\t%d %d %d %d %d\n", p->nome, &p->sexo, &p->idade, &p->musicas[0], &p->musicas[1], &p->musicas[2], &p->musicas[3], &p->musicas[4]) != EOF ) {
 
         no *l = malloc(sizeof(no));
 
-        if ( menor_igual_20(*p) && masculino(*p) ) {
+        if ( menor_igual_20(*p) && masculino(*p) )
             insere_do_arquivo(l1, *p);
-            // for (int i = 0; i < 5; i++ )
-            //     adiciona_voto(m1, p->musicas[i]);
-        }
 
-        if ( maior_20(*p) && masculino(*p) ) {
+        if ( maior_20(*p) && masculino(*p) )
             insere_do_arquivo(l2, *p);
-            // for (int i = 0; i < 5; i++ )
-            //     adiciona_voto(m2, p->musicas[i]);            
-        }
-        if ( menor_igual_20(*p) && feminino(*p) ) {
+
+        if ( menor_igual_20(*p) && feminino(*p) )
             insere_do_arquivo(l3, *p);
-            // for (int i = 0; i < 5; i++ )
-            //     adiciona_voto(m3, p->musicas[i]);            
-        }
-        if ( maior_20(*p) && feminino(*p) ) {
+
+        if ( maior_20(*p) && feminino(*p) )
             insere_do_arquivo(l4, *p);
-            // for (int i = 0; i < 5; i++ )
-            //     adiciona_voto(m4, p->musicas[i]);    
-        }                      
 
     }
 
@@ -617,7 +517,7 @@ void le_arquivo( FILE *arq1, FILE *arq2, no **l1, no **l2, no **l3, no **l4, mus
     int aux1;
     int aux2;
 
-    while ( fscanf(arq2, "%d %d\t", &aux1, &aux2) != EOF ) {
+    while ( fscanf(arquivo_musicas, "%d %d\t", &aux1, &aux2) != EOF ) {
         if (j == 30)
             j = 0;
         if ( i < 30 ) {
