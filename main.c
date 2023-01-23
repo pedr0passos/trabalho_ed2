@@ -458,12 +458,11 @@ pessoa *le_pessoa(musicas *m1, musicas *m2, musicas *m3, musicas *m4) {
         else {
             int repetido = FALSE;
             if (i > 0) {
-                for (int j = 0; j < i; j++) {
+                for (int j = 0; j < i; j++)
                     if ( novo->musicas[i] == novo->musicas[j] ) {
                         printf("Valor Repetido! Tente Novamente\n");
                         repetido = TRUE;
-                    }
-                }                
+                    }            
             } 
             if (!repetido) {
 
@@ -540,46 +539,51 @@ void le_arquivo(no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, mu
         i++;
     }
 
+    fclose(arquivo_pesquisa);
+    fclose(arquivo_musicas);
+
 }
 
 void grava( no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musicas *m3, musicas *m4 ) {
 
-    FILE *arq1 = fopen("pesquisa.txt", "w");
-    FILE *arq2 = fopen("musicas.txt", "w");
+    FILE *arquivo_pesquisa = fopen("pesquisa.txt", "w");
+    FILE *arquivo_musicas = fopen("musicas.txt", "w");
 
     // gravando a lista1
-    for ( no *temporario = (*l1); temporario != NULL; temporario = temporario->proximo ) {
-        fprintf(arq1,"%s\t%c\t%d\t%d %d %d %d %d\n", temporario->p.nome, temporario->p.sexo, temporario->p.idade, temporario->p.musicas[0], temporario->p.musicas[1], temporario->p.musicas[2], temporario->p.musicas[3], temporario->p.musicas[4]);
-    }
+    for ( no *temporario = (*l1); temporario != NULL; temporario = temporario->proximo )
+        fprintf(arquivo_pesquisa,"%s\t%c\t%d\t%d %d %d %d %d\n", temporario->p.nome, temporario->p.sexo, temporario->p.idade, temporario->p.musicas[0], temporario->p.musicas[1], temporario->p.musicas[2], temporario->p.musicas[3], temporario->p.musicas[4]);
+
     // gravando a lista2
-    for ( no *temporario = (*l2); temporario != NULL; temporario = temporario->proximo ) {
-        fprintf(arq1,"%s\t%c\t%d\t%d %d %d %d %d\n", temporario->p.nome, temporario->p.sexo, temporario->p.idade, temporario->p.musicas[0], temporario->p.musicas[1], temporario->p.musicas[2], temporario->p.musicas[3], temporario->p.musicas[4]);
-    }
+    for ( no *temporario = (*l2); temporario != NULL; temporario = temporario->proximo )
+        fprintf(arquivo_pesquisa,"%s\t%c\t%d\t%d %d %d %d %d\n", temporario->p.nome, temporario->p.sexo, temporario->p.idade, temporario->p.musicas[0], temporario->p.musicas[1], temporario->p.musicas[2], temporario->p.musicas[3], temporario->p.musicas[4]);
+    
     // gravando a lista3
-    for ( no *temporario = (*l3); temporario != NULL; temporario = temporario->proximo ) {
-        fprintf(arq1,"%s\t%c\t%d\t%d %d %d %d %d\n", temporario->p.nome, temporario->p.sexo, temporario->p.idade, temporario->p.musicas[0], temporario->p.musicas[1], temporario->p.musicas[2], temporario->p.musicas[3], temporario->p.musicas[4]);
-    }
+    for ( no *temporario = (*l3); temporario != NULL; temporario = temporario->proximo )
+        fprintf(arquivo_pesquisa,"%s\t%c\t%d\t%d %d %d %d %d\n", temporario->p.nome, temporario->p.sexo, temporario->p.idade, temporario->p.musicas[0], temporario->p.musicas[1], temporario->p.musicas[2], temporario->p.musicas[3], temporario->p.musicas[4]);
+    
     // gravando a lista4
-    for ( no *temporario = (*l4); temporario != NULL; temporario = temporario->proximo ) {
-        fprintf(arq1,"%s\t%c\t%d\t%d %d %d %d %d\n", temporario->p.nome, temporario->p.sexo, temporario->p.idade, temporario->p.musicas[0], temporario->p.musicas[1], temporario->p.musicas[2], temporario->p.musicas[3], temporario->p.musicas[4]);
-    }
+    for ( no *temporario = (*l4); temporario != NULL; temporario = temporario->proximo ) 
+        fprintf(arquivo_pesquisa,"%s\t%c\t%d\t%d %d %d %d %d\n", temporario->p.nome, temporario->p.sexo, temporario->p.idade, temporario->p.musicas[0], temporario->p.musicas[1], temporario->p.musicas[2], temporario->p.musicas[3], temporario->p.musicas[4]);
+    
 
     // gravando a lista de musicas 1
     for ( int i = 0; i < MaxMusicas; i++ ) 
-        fprintf(arq2, "%d %d\t", m1[i].musica, m1[i].votos);
+        fprintf(arquivo_musicas, "%d %d\t", m1[i].musica, m1[i].votos);
 
     // gravando a lista de musicas 2
     for ( int i = 0; i < MaxMusicas; i++ )
-        fprintf(arq2, "%d %d\t", m2[i].musica, m2[i].votos);
+        fprintf(arquivo_musicas, "%d %d\t", m2[i].musica, m2[i].votos);
 
     // gravando a lista de musicas 3
     for ( int i = 0; i < MaxMusicas; i++ )
-        fprintf(arq2, "%d %d\t", m3[i].musica, m3[i].votos);
+        fprintf(arquivo_musicas, "%d %d\t", m3[i].musica, m3[i].votos);
 
     // gravando a lista de musicas 4
     for ( int i = 0; i < MaxMusicas; i++ ) 
-        fprintf(arq2, "%d %d\t", m4[i].musica, m4[i].votos);
+        fprintf(arquivo_musicas, "%d %d\t", m4[i].musica, m4[i].votos);
 
+    fclose(arquivo_pesquisa);
+    fclose(arquivo_musicas);
 }
 
 // Função de Encerramento
