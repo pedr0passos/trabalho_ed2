@@ -3,6 +3,7 @@ Pedro	M	12	23 1 9 11 17
 Thiago	M	8	30 9 1 23 12
 Gustavo	M	18	19 11 23 3 6
 Fernando	M	12	1 9 5 12 4
+Edmar Inferno Kampke	M	40	4 17 11 3 29
 Helder	M	32	6 17 12 19 21
 Natan	M	28	5 15 23 12 30
 Caio	M	33	30 8 18 11 16

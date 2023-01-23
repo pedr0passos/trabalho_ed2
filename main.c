@@ -395,7 +395,6 @@ void insere_do_arquivo(no **lista, pessoa nova) {
         (*lista) = novo_no;
     }
 
-
 }
 
 // Funções de Imprimir
