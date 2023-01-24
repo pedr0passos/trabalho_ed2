@@ -25,7 +25,8 @@ typedef struct lista {
 }no;
 
 typedef struct m {
-    int musica;
+    char nome[256];
+    int identificador;
     int votos;
 }musicas;
 
@@ -52,6 +53,8 @@ void insere_do_arquivo(no **lista, pessoa nova);
 
 void le_arquivo(no **lista1, no **lista2, no **lista3, no **lista4, musicas *m1, musicas *m2, musicas *m3, musicas *m4);
 void grava(no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musicas *m3, musicas *m4);
+void grava_musicas(musicas *m, int tamanho);
+
 
 int decrementa(int numero);
 void shellsort(musicas *m, int t);
@@ -89,16 +92,20 @@ int main () {
     cria_lista(&lista3);
     cria_lista(&lista4);
 
-    // listas das musicas de cada categoria em ordem
-    musicas *m1 = malloc(sizeof(musicas)*MaxMusicas);
-    musicas *m2 = malloc(sizeof(musicas)*MaxMusicas);
-    musicas *m3 = malloc(sizeof(musicas)*MaxMusicas);
-    musicas *m4 = malloc(sizeof(musicas)*MaxMusicas);
+    musicas musicas_total[MaxMusicas];
+    musicas musicas_populares[MaxMusicas];    
 
-    cria_lista_musicas(m1);
-    cria_lista_musicas(m2);
-    cria_lista_musicas(m3);
-    cria_lista_musicas(m4);
+    musicas musicas_homem_menor_20[MaxMusicas];
+    musicas musicas_homem_maior_20[MaxMusicas];
+    musicas musicas_feminino_menor_20[MaxMusicas];
+    musicas musicas_feminino_maior_20[MaxMusicas];
+
+    cria_lista_musicas(musicas_total);
+    cria_lista_musicas(musicas_populares);
+    cria_lista_musicas(musicas_homem_menor_20);
+    cria_lista_musicas(musicas_homem_maior_20);
+    cria_lista_musicas(musicas_feminino_menor_20);
+    cria_lista_musicas(musicas_feminino_maior_20);
 
     // Quatro listas separadas com o nome e o sobrenome de todos os pesquisados que tenham mencionado em primeiro lugar uma das três músicas mais populares na categoria.
     no *nome_pesquisados1, *nome_pesquisados2, *nome_pesquisados3, *nome_pesquisados4;
@@ -107,7 +114,7 @@ int main () {
     cria_lista(&nome_pesquisados3);
     cria_lista(&nome_pesquisados4);
     
-    le_arquivo(&lista1, &lista2, &lista3, &lista4, m1, m2, m3, m4);
+    le_pesquisa(lista1);
 
     int opcao;
     while(laco1) {
@@ -485,68 +492,21 @@ pessoa *le_pessoa(musicas *m1, musicas *m2, musicas *m3, musicas *m4) {
 }
 
 // Funções do Arquivo ( Leitura e Gravacao )
-void le_arquivo(no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musicas *m3, musicas *m4 ) {
-    
-    pessoa *p = malloc(sizeof(pessoa));
+void le_pesquisa (no **lista) {
+    FILE *arquivo_pesquisa = fopen("arquivos/pesquisa.txt", "r");
+    pessoa *nova = malloc(sizeof(pessoa));
+    while ( fscanf(arquivo_pesquisa, "%s\t%c\t%d\t%d %d %d %d %d\n", nova->nome, &nova->sexo, &nova->idade, &nova->musicas[0], &nova->musicas[1], &nova->musicas[2], &nova->musicas[3], &nova->musicas[4]) != EOF )
+        insere(*lista, nova);
+}
 
-    FILE *arquivo_pesquisa = fopen("pesquisa.txt", "r");
-    FILE *arquivo_musicas = fopen("musicas.txt", "r");
-
-    while ( fscanf(arquivo_pesquisa, "%[^\t]\t%c\t%d\t%d %d %d %d %d\n", p->nome, &p->sexo, &p->idade, &p->musicas[0], &p->musicas[1], &p->musicas[2], &p->musicas[3], &p->musicas[4]) != EOF ) {
-
-        no *l = malloc(sizeof(no));
-
-        if ( menor_igual_20(*p) && masculino(*p) )
-            insere_do_arquivo(l1, *p);
-
-        if ( maior_20(*p) && masculino(*p) )
-            insere_do_arquivo(l2, *p);
-
-        if ( menor_igual_20(*p) && feminino(*p) )
-            insere_do_arquivo(l3, *p);
-
-        if ( maior_20(*p) && feminino(*p) )
-            insere_do_arquivo(l4, *p);
-
-    }
-
-    int i = 0;
-    int j = 0;
-    int aux1;
-    int aux2;
-
-    while ( fscanf(arquivo_musicas, "%d %d\t", &aux1, &aux2) != EOF ) {
-        if (j == 30)
-            j = 0;
-        if ( i < 30 ) {
-            m1[j].musica = aux1;
-            m1[j].votos = aux2;
-        }
-        if ( i >= 30 && i < 60 ) {
-            m2[j].musica = aux1;
-            m2[j].votos = aux2;            
-        }
-        if ( i >= 60 && i < 90 ) {
-            m3[j].musica = aux1;
-            m3[j].votos = aux2;         
-        }
-        if ( i >= 90 && i < 120 ) {
-            m4[j].musica = aux1;
-            m4[j].votos = aux2;
-        }
-        j++;
-        i++;
-    }
-
-    fclose(arquivo_pesquisa);
-    fclose(arquivo_musicas);
+void le_musicas() {
 
 }
 
 void grava( no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musicas *m3, musicas *m4 ) {
 
-    FILE *arquivo_pesquisa = fopen("pesquisa.txt", "w");
-    FILE *arquivo_musicas = fopen("musicas.txt", "w");
+    FILE *arquivo_pesquisa = fopen("arquivos/pesquisa.txt", "w");
+    FILE *arquivo_musicas = fopen("arquivos/musicas.txt", "w");
 
     // gravando a lista1
     for ( no *temporario = (*l1); temporario != NULL; temporario = temporario->proximo )
@@ -564,25 +524,14 @@ void grava( no **l1, no **l2, no **l3, no **l4, musicas *m1, musicas *m2, musica
     for ( no *temporario = (*l4); temporario != NULL; temporario = temporario->proximo ) 
         fprintf(arquivo_pesquisa,"%s\t%c\t%d\t%d %d %d %d %d\n", temporario->p.nome, temporario->p.sexo, temporario->p.idade, temporario->p.musicas[0], temporario->p.musicas[1], temporario->p.musicas[2], temporario->p.musicas[3], temporario->p.musicas[4]);
     
-
-    // gravando a lista de musicas 1
-    for ( int i = 0; i < MaxMusicas; i++ ) 
-        fprintf(arquivo_musicas, "%d %d\t", m1[i].musica, m1[i].votos);
-
-    // gravando a lista de musicas 2
-    for ( int i = 0; i < MaxMusicas; i++ )
-        fprintf(arquivo_musicas, "%d %d\t", m2[i].musica, m2[i].votos);
-
-    // gravando a lista de musicas 3
-    for ( int i = 0; i < MaxMusicas; i++ )
-        fprintf(arquivo_musicas, "%d %d\t", m3[i].musica, m3[i].votos);
-
-    // gravando a lista de musicas 4
-    for ( int i = 0; i < MaxMusicas; i++ ) 
-        fprintf(arquivo_musicas, "%d %d\t", m4[i].musica, m4[i].votos);
-
     fclose(arquivo_pesquisa);
     fclose(arquivo_musicas);
+}
+
+void grava_musicas(musicas *m, int tamanho) {
+    FILE *arquivo_musicas = fopen("arquivos/musicas.txt", "w");
+    for ( int i = 0; i < tamanho; i++ ) 
+        fprintf(arquivo_musicas, "%s\t%d\t%d\n", m[i].nome, m[i].identificador, m[i].votos);
 }
 
 // Função de Encerramento
