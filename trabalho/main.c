@@ -475,6 +475,7 @@ void grava_pesquisa(no **lista) {
 }
 
 void grava_pesquisa_categoria ( FILE *arquivo_pesquisa, no **lista ) {
+    fprintf(arquivo_pesquisa, "NOME E SOBRENOME DAS PESSOAS QUE MENCIONARAM EM PRIMEIRO LUGAR UMA DAS TRES MUSICAS MAIS POPULARES DA CATEGORIA\n");
     for (no *temporario = (*lista); temporario != NULL; temporario = temporario->proximo )
         fprintf(arquivo_pesquisa, "Nome e Sobrenome: %s\n", temporario->p.nome);
 }
