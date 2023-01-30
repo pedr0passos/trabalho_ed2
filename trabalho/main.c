@@ -81,7 +81,6 @@ int main () {
     int laco = TRUE;
 
     no *total_pesquisados;
-
     no *masculino_menor_20;
     no *masculino_maior_20;
     no *feminino_menor_20;
@@ -130,6 +129,8 @@ int main () {
         linha();
         printf(" 1 - Adicionar a Pesquisa\n");
         printf(" 2 - Mostrar Resultado da Pesquisa Completa\n");
+        // mostrar cada categoria independente de terem votado ou nao no top3
+        // opcao de imprimir cada uma sepada
         printf(" 3 - Mostrar Musicas Mais Populares\n");
         printf(" 4 - Mostrar Pesquisados que Selecionaram como Primeira Opcao as TOP 3 Musicas da Categoria\n");
         printf(" 5 - Mostrar Musicas Mais Populares de Cada Categoria\n");
@@ -483,6 +484,7 @@ void grava_pesquisa(no **lista) {
 }
 
 void grava_pesquisa_categoria ( FILE *arquivo_pesquisa, no **lista ) {
+    fprintf(arquivo_pesquisa, "----------------------------------------------------------------------------------------------------------------\n");
     fprintf(arquivo_pesquisa, "NOME E SOBRENOME DAS PESSOAS QUE MENCIONARAM EM PRIMEIRO LUGAR UMA DAS TRES MUSICAS MAIS POPULARES DA CATEGORIA\n");
     fprintf(arquivo_pesquisa, "----------------------------------------------------------------------------------------------------------------\n");
     for (no *temporario = (*lista); temporario != NULL; temporario = temporario->proximo )
