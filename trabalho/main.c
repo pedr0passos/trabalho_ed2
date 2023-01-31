@@ -88,7 +88,6 @@ int main () {
     no *feminino_maior_20;
 
     musicas musicas_total[MaxMusicas];   
-
     musicas musicas_masculino_menor_20[MaxMusicas];
     musicas musicas_masculino_maior_20[MaxMusicas];
     musicas musicas_feminino_menor_20[MaxMusicas];
@@ -106,24 +105,20 @@ int main () {
     cria_lista_musicas(musicas_feminino_menor_20);
     cria_lista_musicas(musicas_feminino_maior_20);
     
-    FILE *m_menor = fopen("arquivos/musicas/musicas_masculino_menor.txt", "r");
-    FILE *m_maior = fopen("arquivos/musicas/musicas_masculino_maior.txt", "r");
-    FILE *f_menor = fopen("arquivos/musicas/musicas_feminino_menor.txt", "r");
-    FILE *f_maior = fopen("arquivos/musicas/musicas_feminino_maior.txt", "r");
-    FILE *total_musicas = fopen("arquivos/musicas/musicas.txt", "r");
-
+    FILE *arquivo;
+    arquivo = fopen("resultado_pesquisa/musicas_masculino_menor.txt", "r");
+    le_musicas(arquivo, musicas_masculino_menor_20);
+    arquivo = fopen("resultado_pesquisa/musicas_masculino_maior.txt", "r");
+    le_musicas(arquivo, musicas_masculino_maior_20);
+    arquivo = fopen("resultado_pesquisa/musicas_feminino_menor.txt", "r");
+    le_musicas(arquivo, musicas_feminino_menor_20);
+    arquivo = fopen("resultado_pesquisa/musicas_feminino_maior.txt", "r");
+    le_musicas(arquivo, musicas_feminino_maior_20);
+    arquivo = fopen("resultado_pesquisa/musicas.txt", "r");
+    le_musicas(arquivo, musicas_total);
     le_pesquisa(&total_pesquisados);
-    le_musicas(m_menor, musicas_masculino_menor_20);
-    le_musicas(m_maior, musicas_masculino_maior_20);
-    le_musicas(f_menor, musicas_feminino_menor_20);
-    le_musicas(f_maior, musicas_feminino_maior_20);
-    le_musicas(total_musicas, musicas_total);
-
-    fclose(m_maior);
-    fclose(m_menor);
-    fclose(f_menor);
-    fclose(f_maior);
-    fclose(total_musicas);
+    
+    fclose(arquivo);
 
     int opcao;
     while(laco) {
@@ -384,53 +379,46 @@ void insere_do_arquivo(no **lista, pessoa nova) {
 
 // Funções de Imprimir
 void imprime (no **lista) {
-    char n[10];
     if (!vazia(lista))
         for (no *p = (*lista); p!= NULL; p = p->proximo ) {
-            if ( masculino(p->p))
-                strcpy(n, "Masculino");
-            else 
-                strcpy(n, "Feminino");
-            printf(" Nome: %s | Idade: %d | Sexo: %s | Musicas: %d %d %d %d %d\n", p->p.nome, p->p.idade, n, p->p.musicas[0], p->p.musicas[1], p->p.musicas[2], p->p.musicas[3], p->p.musicas[4]);
+            // if ( masculino(p->p))
+            //     strcpy(n, "Masculino");
+            // else 
+            //     strcpy(n, "Feminino");
+            printf(" Nome: %s | Idade: %d | Sexo: %c | Musicas: %d %d %d %d %d\n", p->p.nome, p->p.idade, p->p.sexo, p->p.musicas[0], p->p.musicas[1], p->p.musicas[2], p->p.musicas[3], p->p.musicas[4]);
         }  
     else 
         printf(" Lista Vazia!\n");
 }
 
 int imprime_categoria_todos (no **lista, int escolha ) {
-    char n[10];
     limpa_terminal();
     linha();
     for ( no *aux = (*lista); aux != NULL; aux = aux->proximo ) {
-        switch (escolha)
-        {
+        switch (escolha) {
         case 1:;
-            if ( masculino(aux->p) && menor_igual_20(aux->p) ) {
-                strcpy(n, "Masculino");
-                printf(" Nome: %s | Idade: %d | Sexo: %s | Musicas: %d %d %d %d %d\n", aux->p.nome, aux->p.idade, n, aux->p.musicas[0], aux->p.musicas[1], aux->p.musicas[2], aux->p.musicas[3], aux->p.musicas[4]);
-            }        
+            if ( masculino(aux->p) && menor_igual_20(aux->p) )
+                printf(" Nome: %s | Idade: %d | Sexo: %c | Musicas: %d %d %d %d %d\n", aux->p.nome, aux->p.idade, aux->p.sexo, aux->p.musicas[0], aux->p.musicas[1], aux->p.musicas[2], aux->p.musicas[3], aux->p.musicas[4]);        
         break;
         case 2:;
-            if ( masculino(aux->p) && maior_20(aux->p) ) {
-                strcpy(n, "Masculino");
-                printf(" Nome: %s | Idade: %d | Sexo: %s | Musicas: %d %d %d %d %d\n", aux->p.nome, aux->p.idade, n, aux->p.musicas[0], aux->p.musicas[1], aux->p.musicas[2], aux->p.musicas[3], aux->p.musicas[4]);
-            }
+            if ( masculino(aux->p) && maior_20(aux->p) )
+                printf(" Nome: %s | Idade: %d | Sexo: %c | Musicas: %d %d %d %d %d\n", aux->p.nome, aux->p.idade, aux->p.sexo, aux->p.musicas[0], aux->p.musicas[1], aux->p.musicas[2], aux->p.musicas[3], aux->p.musicas[4]);
         break;
         case 3:;
-            if ( feminino(aux->p) && menor_igual_20(aux->p) ) {
-                strcpy(n, "Feminino");
-                printf(" Nome: %s | Idade: %d | Sexo: %s | Musicas: %d %d %d %d %d\n", aux->p.nome, aux->p.idade, n, aux->p.musicas[0], aux->p.musicas[1], aux->p.musicas[2], aux->p.musicas[3], aux->p.musicas[4]);
-            }
+            if ( feminino(aux->p) && menor_igual_20(aux->p) )
+                printf(" Nome: %s | Idade: %d | Sexo: %c | Musicas: %d %d %d %d %d\n", aux->p.nome, aux->p.idade, aux->p.sexo, aux->p.musicas[0], aux->p.musicas[1], aux->p.musicas[2], aux->p.musicas[3], aux->p.musicas[4]);
         case 4:;
-            if ( feminino(aux->p) && maior_20(aux->p) ) {
-                strcpy(n, "Feminino");
-                printf(" Nome: %s | Idade: %d | Sexo: %s | Musicas: %d %d %d %d %d\n", aux->p.nome, aux->p.idade, n, aux->p.musicas[0], aux->p.musicas[1], aux->p.musicas[2], aux->p.musicas[3], aux->p.musicas[4]);
-            }
+            if ( feminino(aux->p) && maior_20(aux->p) )
+                printf(" Nome: %s | Idade: %d | Sexo: %c | Musicas: %d %d %d %d %d\n", aux->p.nome, aux->p.idade, aux->p.sexo, aux->p.musicas[0], aux->p.musicas[1], aux->p.musicas[2], aux->p.musicas[3], aux->p.musicas[4]);
+        break;
+        case 5:;
+            limpa_terminal();
+            return FALSE;
         break;
         default:
-            return FALSE;
+            linha();
             printf("Escolha Incorreta!\n");
-            break;
+            linha();
         }
     }
     return TRUE;
@@ -522,7 +510,7 @@ pessoa *le_pessoa(musicas *m1, musicas *m2, musicas *m3, musicas *m4, musicas *m
 // Funções do Arquivo ( Leitura e Gravacao )
 void le_pesquisa (no **lista) {
     pessoa *nova = malloc(sizeof(pessoa));
-    FILE *arquivo_pesquisa = fopen("arquivos/pesquisas/pesquisa.txt", "r");
+    FILE *arquivo_pesquisa = fopen("resultado_pesquisa/pesquisa.txt", "r");
     while ( fscanf(arquivo_pesquisa, "%[^\t]\t%c\t%d\t%d %d %d %d %d\n", nova->nome, &nova->sexo, &nova->idade, &nova->musicas[0], &nova->musicas[1], &nova->musicas[2], &nova->musicas[3], &nova->musicas[4]) != EOF )
         insere_do_arquivo(lista, *nova);
     fclose(arquivo_pesquisa);
@@ -537,7 +525,7 @@ void le_musicas( FILE *arquivo_musicas, musicas *m) {
 
 void grava_pesquisa(no **lista) {
 
-    FILE *arquivo_pesquisa = fopen("arquivos/pesquisas/pesquisa.txt", "w");
+    FILE *arquivo_pesquisa = fopen("resultado_pesquisa/pesquisa.txt", "w");
     for ( no *temporario = (*lista); temporario != NULL; temporario = temporario->proximo )
         fprintf(arquivo_pesquisa,"%s\t%c\t%d\t%d %d %d %d %d\n", temporario->p.nome, temporario->p.sexo, temporario->p.idade, temporario->p.musicas[0], temporario->p.musicas[1], temporario->p.musicas[2], temporario->p.musicas[3], temporario->p.musicas[4]);
     
@@ -554,7 +542,7 @@ void grava_pesquisa_categoria ( FILE *arquivo_pesquisa, no **lista ) {
 
 void grava_musicas( musicas *m, int tamanho) {
     shellsort(m, tamanho);
-    FILE *arquivo_musicas = fopen("arquivos/musicas/musicas.txt", "w");
+    FILE *arquivo_musicas = fopen("resultado_pesquisa/musicas.txt", "w");
     fprintf(arquivo_musicas, "Musica\tVotos\n");
     for ( int i = 0; i < tamanho; i++ ) 
         fprintf(arquivo_musicas, "%d\t\t%d\n",m[i].musica, m[i].votos);
@@ -571,32 +559,29 @@ void grava_musicas_categoria(FILE *arquivo_musicas, musicas *m, int tamanho) {
 // Função de Encerramento
 void encerra(no **l1, no **l2, no **l3, no **l4, no **lista_completa, musicas *m1, musicas *m2, musicas *m3,musicas *m4, musicas *musicas_completa) {
 
-    FILE *arq_m_menor = fopen("arquivos/musicas/musicas_masculino_menor.txt", "w");
-    FILE *arq_m_maior = fopen("arquivos/musicas/musicas_masculino_maior.txt", "w");
-    FILE *arq_f_menor = fopen("arquivos/musicas/musicas_feminino_menor.txt", "w");
-    FILE *arq_f_maior = fopen("arquivos/musicas/musicas_feminino_maior.txt", "w");
-
-    grava_musicas_categoria(arq_m_menor, m1, MaxMusicas);
-    grava_musicas_categoria(arq_m_maior, m2, MaxMusicas);
-    grava_musicas_categoria(arq_f_menor, m3, MaxMusicas);
-    grava_musicas_categoria(arq_f_maior, m4, MaxMusicas);
+    FILE *arquivo;
+    arquivo = fopen("resultado_pesquisa/musicas_masculino_menor.txt", "w");
+    grava_musicas_categoria(arquivo, m1, MaxMusicas);
+    arquivo = fopen("resultado_pesquisa/musicas_masculino_maior.txt", "w");
+    grava_musicas_categoria(arquivo, m2, MaxMusicas);
+    arquivo = fopen("resultado_pesquisa/musicas_feminino_menor.txt", "w");
+    grava_musicas_categoria(arquivo, m3, MaxMusicas);
+    arquivo = fopen("resultado_pesquisa/musicas_feminino_maior.txt", "w");
+    grava_musicas_categoria(arquivo, m4, MaxMusicas);   
     grava_musicas(musicas_completa, MaxMusicas);
-
-    arq_m_menor = fopen("arquivos/pesquisas/pesquisa_masculino_menor.txt", "w");
-    arq_m_maior = fopen("arquivos/pesquisas/pesquisa_masculino_maior.txt", "w");
-    arq_f_menor = fopen("arquivos/pesquisas/pesquisa_feminino_menor.txt", "w");
-    arq_f_maior = fopen("arquivos/pesquisas/pesquisa_feminino_maior.txt", "w");
     
-    grava_pesquisa_categoria(arq_m_menor, l1);
-    grava_pesquisa_categoria(arq_m_maior, l2);
-    grava_pesquisa_categoria(arq_f_menor, l3);
-    grava_pesquisa_categoria(arq_f_maior, l4);
+
+    arquivo = fopen("resultado_pesquisa/pesquisa_masculino_menor.txt", "w");
+    grava_pesquisa_categoria(arquivo, l1);
+    arquivo = fopen("resultado_pesquisa/pesquisa_masculino_maior.txt", "w");
+    grava_pesquisa_categoria(arquivo, l2);
+    arquivo = fopen("resultado_pesquisa/pesquisa_feminino_menor.txt", "w");
+    grava_pesquisa_categoria(arquivo, l3);
+    arquivo = fopen("resultado_pesquisa/pesquisa_feminino_maior.txt", "w");
+    grava_pesquisa_categoria(arquivo, l4);
     grava_pesquisa(lista_completa);
 
-    fclose(arq_f_maior);
-    fclose(arq_f_menor);
-    fclose(arq_m_maior);
-    fclose(arq_m_menor);
+    fclose(arquivo);
 
     linha();
     printf("Programa Encerrado!\n");
