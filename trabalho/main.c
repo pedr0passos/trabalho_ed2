@@ -129,7 +129,7 @@ int main () {
         printf(" 4 - Mostrar Musicas Mais Populares\n");
         printf(" 5 - Mostrar Pesquisados que Selecionaram como Primeira Opcao as TOP 3 Musicas da Categoria\n");
         printf(" 6 - Mostrar Musicas Mais Populares de Cada Categoria\n");
-        printf(" 7 - Sair\n");   
+        printf(" 7 - Salvar e Sair\n");   
         linha();     
         printf(" OPCAO: ");
         scanf("%d", &opcao);
