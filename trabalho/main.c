@@ -44,6 +44,7 @@ void cria_lista_musicas(musicas *m);
 void imprime(no **lista);
 void imprime_musicas(musicas *m, int tamanho);
 void imprime_categoria(no **lista);
+int imprime_categoria_todos (no **lista, int escolha );
 
 pessoa *le_pessoa(musicas *m1, musicas *m2, musicas *m3, musicas *m4, musicas *m5);
 
@@ -129,12 +130,11 @@ int main () {
         linha();
         printf(" 1 - Adicionar a Pesquisa\n");
         printf(" 2 - Mostrar Resultado da Pesquisa Completa\n");
-        // mostrar cada categoria independente de terem votado ou nao no top3
-        // opcao de imprimir cada uma sepada
-        printf(" 3 - Mostrar Musicas Mais Populares\n");
-        printf(" 4 - Mostrar Pesquisados que Selecionaram como Primeira Opcao as TOP 3 Musicas da Categoria\n");
-        printf(" 5 - Mostrar Musicas Mais Populares de Cada Categoria\n");
-        printf(" 6 - Sair\n");   
+        printf(" 3 - Mostrar Categorias dos Pesquisados\n");
+        printf(" 4 - Mostrar Musicas Mais Populares\n");
+        printf(" 5 - Mostrar Pesquisados que Selecionaram como Primeira Opcao as TOP 3 Musicas da Categoria\n");
+        printf(" 6 - Mostrar Musicas Mais Populares de Cada Categoria\n");
+        printf(" 7 - Sair\n");   
         linha();     
         printf(" OPCAO: ");
         scanf("%d", &opcao);
@@ -154,13 +154,29 @@ int main () {
         break;
         case 3:;
             limpa_terminal();
+            int laco2 = TRUE;
+            while ( laco2 ) {
+                linha();
+                printf(" 1 - Masculino <= 20\n");
+                printf(" 2 - Masculino  > 20\n");
+                printf(" 3 - Feminino <= 20\n");
+                printf(" 4 - Feminino  > 20\n");
+                printf(" 5 - Sair\n");
+                linha();
+                printf("Escolha: ");
+                scanf("%d", &opcao);
+                laco2 = imprime_categoria_todos(&total_pesquisados, opcao);
+            }
+        break;
+        case 4:;
+            limpa_terminal();
             shellsort(musicas_total, MaxMusicas);
             linha();
             printf(" MUSICAS COM O TOTAL DE VOTOS OBTIDOS NA PESQUISA:\n");
             linha();
             imprime_musicas(musicas_total, MaxMusicas);
         break;
-        case 4:;
+        case 5:;
             // // separa as pessoas em suas devidas categorias
             atualiza_categorias(&total_pesquisados, &masculino_menor_20, &masculino_maior_20, &feminino_menor_20, &feminino_maior_20, musicas_masculino_menor_20, musicas_masculino_maior_20, musicas_feminino_menor_20, musicas_feminino_maior_20);
             limpa_terminal();
@@ -179,7 +195,7 @@ int main () {
             printf(" FEMININO COM IDADE MAIOR QUE 20 ANOS:\n");
             imprime_categoria(&feminino_maior_20);
         break;
-        case 5:;
+        case 6:;
             limpa_terminal();
             linha();
             printf(" MUSICAS MAIS POPULARES DE CADA CATEGORIA:\n");
@@ -196,7 +212,7 @@ int main () {
             printf(" FEMININO COM IDADE MAIOR QUE 20:\n\n");
             imprime_musicas(musicas_feminino_maior_20, MaxMusicas);
         break;
-        case 6:;
+        case 7:;
             limpa_terminal();
             // separando as pessoas em suas categorias para poder salvar
             atualiza_categorias(&total_pesquisados, &masculino_menor_20, &masculino_maior_20, &feminino_menor_20, &feminino_maior_20, musicas_masculino_menor_20, musicas_masculino_maior_20, musicas_feminino_menor_20, musicas_feminino_maior_20);
@@ -208,7 +224,7 @@ int main () {
             printf(" Opcao Invalida!\n");
         }
     } 
-    return 0;
+    return FALSE;
 } 
 
 /*----------------------------------------------------------------------------
@@ -368,11 +384,56 @@ void insere_do_arquivo(no **lista, pessoa nova) {
 
 // Funções de Imprimir
 void imprime (no **lista) {
+    char n[10];
     if (!vazia(lista))
-        for (no *p = (*lista); p!= NULL; p = p->proximo )
-            printf(" Nome: %s | Idade: %d | Sexo: %c | Musicas: %d %d %d %d %d\n", p->p.nome, p->p.idade, p->p.sexo, p->p.musicas[0], p->p.musicas[1], p->p.musicas[2], p->p.musicas[3], p->p.musicas[4]);
+        for (no *p = (*lista); p!= NULL; p = p->proximo ) {
+            if ( masculino(p->p))
+                strcpy(n, "Masculino");
+            else 
+                strcpy(n, "Feminino");
+            printf(" Nome: %s | Idade: %d | Sexo: %s | Musicas: %d %d %d %d %d\n", p->p.nome, p->p.idade, n, p->p.musicas[0], p->p.musicas[1], p->p.musicas[2], p->p.musicas[3], p->p.musicas[4]);
+        }  
     else 
         printf(" Lista Vazia!\n");
+}
+
+int imprime_categoria_todos (no **lista, int escolha ) {
+    char n[10];
+    limpa_terminal();
+    linha();
+    for ( no *aux = (*lista); aux != NULL; aux = aux->proximo ) {
+        switch (escolha)
+        {
+        case 1:;
+            if ( masculino(aux->p) && menor_igual_20(aux->p) ) {
+                strcpy(n, "Masculino");
+                printf(" Nome: %s | Idade: %d | Sexo: %s | Musicas: %d %d %d %d %d\n", aux->p.nome, aux->p.idade, n, aux->p.musicas[0], aux->p.musicas[1], aux->p.musicas[2], aux->p.musicas[3], aux->p.musicas[4]);
+            }        
+        break;
+        case 2:;
+            if ( masculino(aux->p) && maior_20(aux->p) ) {
+                strcpy(n, "Masculino");
+                printf(" Nome: %s | Idade: %d | Sexo: %s | Musicas: %d %d %d %d %d\n", aux->p.nome, aux->p.idade, n, aux->p.musicas[0], aux->p.musicas[1], aux->p.musicas[2], aux->p.musicas[3], aux->p.musicas[4]);
+            }
+        break;
+        case 3:;
+            if ( feminino(aux->p) && menor_igual_20(aux->p) ) {
+                strcpy(n, "Feminino");
+                printf(" Nome: %s | Idade: %d | Sexo: %s | Musicas: %d %d %d %d %d\n", aux->p.nome, aux->p.idade, n, aux->p.musicas[0], aux->p.musicas[1], aux->p.musicas[2], aux->p.musicas[3], aux->p.musicas[4]);
+            }
+        case 4:;
+            if ( feminino(aux->p) && maior_20(aux->p) ) {
+                strcpy(n, "Feminino");
+                printf(" Nome: %s | Idade: %d | Sexo: %s | Musicas: %d %d %d %d %d\n", aux->p.nome, aux->p.idade, n, aux->p.musicas[0], aux->p.musicas[1], aux->p.musicas[2], aux->p.musicas[3], aux->p.musicas[4]);
+            }
+        break;
+        default:
+            return FALSE;
+            printf("Escolha Incorreta!\n");
+            break;
+        }
+    }
+    return TRUE;
 }
 
 void imprime_categoria(no **lista) {

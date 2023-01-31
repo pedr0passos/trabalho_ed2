@@ -2,16 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define True 1
-#define False 0
-
-typedef struct b {
-    int true = True;
-    int false = False;
-} bool;
+#define ordem 2
 
 int main(){
 
-printf("%d", True || False);
-    return 0;
+    char *nome[128] = 'Masculino';
+    printf("%s", nome);
+
 }
