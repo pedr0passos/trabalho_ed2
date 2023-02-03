@@ -1,13 +1,1 @@
-Andreia Julia	F	17	1 15 11 23 10
-Catterina Vittorazzi	F	19	13 1 29 16 8
-Flavia Cristina	F	2	8 18 4 15 1
-Juliana Fivoratti	F	31	18 1 4 28 30
-Natalia	F	29	30 14 1 8 4
-Fernanda Guimaraes	F	18	9 11 10 21 27
-Henrique da Souza Silva 	M	56	30 1 2 3 5
-Kauan Pinheiros	M	23	1 8 19 2 3
-Gustavo Pigimeu da Souza Soares	M	29	2 13 28 17 1
-Yago Vettorazi	M	8	2 1 15 14 21
-Pedro Henrique Passos Rocha	M	20	1 2 29 14 7
-Jose Souza Padua	M	12	4 10 14 1 2
-Juliano Soares Amadeu	M	20	14 8 10 4 19
+pedro henrique passos	M	19	15 1 2 3 4
